@@ -420,9 +420,9 @@ export default function PpdbForm() {
       )}
 
       {/* Top bar */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 md:p-5 mb-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl shadow-xs border border-slate-200/90 p-4 md:p-5 mb-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-base md:text-lg font-bold">Assalamu&#39;alaikum Ayah / Bunda 👋</h2>
+          <h2 className="text-base md:text-lg font-bold text-blue-950">Assalamu&#39;alaikum Ayah / Bunda 👋</h2>
           <p className="text-xs md:text-sm text-slate-600 mt-0.5">
             Lengkapi 39 data calon peserta didik berikut sesuai Kartu Keluarga (KK) dan Akta Kelahiran.
             Isian tersimpan otomatis di perangkat ini, jadi aman kalau Anda keluar di tengah jalan.
@@ -432,15 +432,14 @@ export default function PpdbForm() {
           <button
             type="button"
             onClick={toggleMode}
-            className="text-xs font-semibold border px-3 py-2.5 rounded-xl hover:bg-ra-100 transition"
-            style={{ background: "#eefbf3", color: "#0f532b", borderColor: "rgba(27,122,67,.3)" }}
+            className="text-xs font-bold border px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 transition"
           >
             {showAll ? "🔢 Per Bagian" : "📋 Tampilkan Semua"}
           </button>
           <button
             type="button"
             onClick={resetDraft}
-            className="text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 px-3 py-2.5 rounded-xl hover:bg-rose-100 transition"
+            className="text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200 px-3.5 py-2.5 rounded-xl hover:bg-rose-100 transition"
           >
             🔄 Kosongkan
           </button>
@@ -452,18 +451,23 @@ export default function PpdbForm() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-5" role="tablist">
           {FORM_STEPS.map((st, i) => {
             const n = i + 1;
+            const isActive = currentStep === n;
             return (
               <button
                 key={n}
                 type="button"
                 role="tab"
-                aria-selected={currentStep === n}
+                aria-selected={isActive}
                 onClick={() => goToStep(n)}
-                className={`step-tab${currentStep === n ? " step-active" : ""}`}
+                className={`step-tab relative overflow-hidden transition-all ${
+                  isActive ? "step-active ring-2 ring-amber-400" : "hover:bg-slate-50"
+                }`}
               >
-                <span className="step-num">{n}</span>
-                <div className="overflow-hidden">
-                  <div className="text-[11px] opacity-80">Bagian {n} ({st.range})</div>
+                <span className="step-num relative z-10">{n}</span>
+                <div className="overflow-hidden relative z-10">
+                  <div className={`text-[11px] ${isActive ? "text-amber-300" : "opacity-80"}`}>
+                    Bagian {n} ({st.range})
+                  </div>
                   <div className="text-xs font-bold truncate">{st.tab}</div>
                 </div>
               </button>

@@ -1,10 +1,9 @@
 "use client";
-import { useState } from "react";
+import React from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   Sparkles,
-  Award,
   CheckCircle2,
   BookOpen,
   Calendar,
@@ -13,14 +12,8 @@ import {
   Mail,
   Phone,
   MessageCircle,
-  HelpCircle,
-  FileText,
-  HeartHandshake,
   Users,
-  Compass,
-  ArrowRight,
   ChevronDown,
-  ShieldCheck,
   Star,
   Check,
 } from "lucide-react";
@@ -28,7 +21,10 @@ import Navbar from "@/components/Navbar";
 import SmartPhoto from "@/components/SmartPhoto";
 import BiayaTable from "@/components/BiayaTable";
 import PpdbForm from "@/components/PpdbForm";
+import { ArcAccordion, type AccordionItem } from "@/components/arc/ArcAccordion";
+import { ArcStepper, type StepItem } from "@/components/arc/ArcStepper";
 import { CONFIG, formatWAForLink } from "@/lib/config";
+import { motionTokens } from "@/lib/motion";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -49,32 +45,97 @@ function WALink({ raw, shown }: { raw: string; shown: string }) {
 }
 
 export default function HomePage() {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const shouldReduceMotion = useReducedMotion();
 
-  const toggleFaq = (index: number) => {
-    setOpenFaq(openFaq === index ? null : index);
-  };
+  // 1. FAQ Items untuk ArcAccordion
+  const faqItems: AccordionItem[] = [
+    {
+      id: "faq-usia",
+      title: "Berapa usia anak yang diterima di RA Assalaamah?",
+      content:
+        "Kelompok A untuk usia 4 s/d 5 tahun, dan Kelompok B untuk usia 5 s/d 6 tahun pada tahun ajaran berjalan (per Juli 2027).",
+    },
+    {
+      id: "faq-jadwal",
+      title: "Kapan jadwal pendaftaran dibuka?",
+      content:
+        "Gelombang 1 dibuka Oktober 2026 hingga Januari 2027. Gelombang 2 dibuka Februari hingga April 2027. Disarankan mendaftar di gelombang 1 karena kuota kelas terbatas.",
+    },
+    {
+      id: "faq-dokumen",
+      title: "Dokumen apa saja yang wajib disiapkan?",
+      content:
+        "Fotokopi Akta Kelahiran, Fotokopi Kartu Keluarga (KK), Pas foto 3x4 (3 lembar), dan Fotokopi KTP Orang Tua. Dokumen Akta dan KK yang sudah diupload di formulir ini tidak perlu difotokopi lagi.",
+    },
+    {
+      id: "faq-tes",
+      title: "Apakah ada tes seleksi masuk untuk calon anak?",
+      content:
+        "Tidak ada tes penentu gugur/lulus. Kami hanya menyelenggarakan tes psikotes dasar ringan setelah anak resmi masuk sekolah, bertujuan memetakan gaya belajar dan keunikan masing-masing ananda.",
+    },
+    {
+      id: "faq-bayar",
+      title: "Bagaimana sistem pembayarannya?",
+      content:
+        "Setelah mengisi formulir online dan mengembalikan berkas persyaratan ke sekolah, orang tua membayar administrasi sebanyak 50% sekaligus mengambil seragam anak di kantor madrasah.",
+    },
+  ];
 
-  const faqs = [
+  // 2. Visi Misi Items untuk ArcAccordion
+  const visiMisiItems: AccordionItem[] = [
     {
-      q: "Berapa usia anak yang diterima di RA Assalaamah?",
-      a: "Kelompok A untuk usia 4 s/d 5 tahun, dan Kelompok B untuk usia 5 s/d 6 tahun pada tahun ajaran berjalan.",
+      id: "visi-misi-ksp",
+      title: "📜 Visi & 7 Misi RA Assalaamah (Dokumen KSP 2026/2027)",
+      content: (
+        <div className="space-y-4 pt-2">
+          <div className="bg-emerald-50/80 p-3.5 rounded-xl border border-emerald-200">
+            <p className="text-xs font-bold text-emerald-900 uppercase tracking-wider">Visi Madrasah:</p>
+            <p className="font-extrabold text-emerald-950 mt-1 text-sm sm:text-base italic">
+              &ldquo;Mempersiapkan Generasi yang Beriman, Berilmu, Berakhlak, dan Beramal Salihah&rdquo;
+            </p>
+          </div>
+          <div>
+            <p className="font-bold text-blue-900 mb-2 text-xs uppercase tracking-wider">Misi Madrasah (7 Butir):</p>
+            <ol className="list-decimal pl-5 space-y-2 text-xs sm:text-sm text-slate-700 leading-relaxed">
+              <li>Membina anak sejak dini dalam mengenal Allah Swt. dan meneladani Rasulullah saw. berdasarkan Al-Qur&apos;an dan hadis sesuai pemahaman para ulama salafussalih;</li>
+              <li>Mengenalkan dan membiasakan nilai-nilai Islami dalam kehidupan sehari-hari;</li>
+              <li>Menghargai dan menggali potensi kecerdasan majemuk setiap anak melalui kegiatan bermain yang beragam;</li>
+              <li>Menciptakan taman bermain dan belajar yang kondusif, aktif, kreatif, dan menyenangkan melalui pembelajaran yang berkesadaran, bermakna, dan menggembirakan;</li>
+              <li>Mempersiapkan kecakapan hidup (life skills) dan kemandirian anak sebagai bekal memasuki jenjang pendidikan berikutnya;</li>
+              <li>Mengintegrasikan tujuh nilai Panca Cinta dalam pembelajaran, pembiasaan, dan budaya madrasah; dan</li>
+              <li>Membangun kemitraan yang harmonis dengan orang tua, yayasan, dan masyarakat sebagai satu kesatuan catur pusat pendidikan.</li>
+            </ol>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
+  // 3. Step Items untuk ArcStepper
+  const alurSteps: StepItem[] = [
+    {
+      id: 1,
+      sublabel: "Langkah 1",
+      label: "Isi Formulir Online",
+      description: "Lengkapi 39 data calon murid sesuai Kartu Keluarga (KK) dan Akta Kelahiran pada formulir di bawah.",
     },
     {
-      q: "Kapan jadwal pendaftaran dibuka?",
-      a: "Gelombang 1 dibuka Oktober 2026 hingga Januari 2027. Gelombang 2 dibuka Februari hingga April 2027.",
+      id: 2,
+      sublabel: "Langkah 2",
+      label: "Konfirmasi WhatsApp",
+      description: "Setelah kirim, sistem otomatis menerbitkan Nomor Registrasi & tombol kirim bukti pendaftaran ke WA panitia.",
     },
     {
-      q: "Dokumen apa saja yang wajib disiapkan?",
-      a: "Fotokopi Akta Kelahiran, Fotokopi Kartu Keluarga (KK), Pas foto 3x4 (3 lembar), dan Fotokopi KTP Orang Tua. Dokumen yang sudah diupload di formulir ini tidak perlu difotokopi lagi.",
+      id: 3,
+      sublabel: "Langkah 3",
+      label: "Serahkan Berkas",
+      description: "Serahkan fotokopi KK, Akta, KTP ortu, dan 3 lembar pas foto 3x4 ke kantor RA Assalaamah.",
     },
     {
-      q: "Apakah ada tes seleksi masuk untuk calon anak?",
-      a: "Tidak ada tes penentu gugur/lulus. Kami hanya melakukan tes psikotes dasar ringan setelah masuk sekolah untuk pemetaan tumbuh kembang dan gaya belajar anak.",
-    },
-    {
-      q: "Bagaimana sistem pembayarannya?",
-      a: "Setelah mengisi formulir online dan mengembalikan berkas persyaratan ke sekolah, orang tua membayar administrasi sebanyak 50% sekaligus mengambil seragam anak.",
+      id: 4,
+      sublabel: "Langkah 4",
+      label: "Bayar 50% & Seragam",
+      description: "Membayar administrasi minimal 50%, ambil seragam anak, dan siap menyambut tahun ajaran baru!",
     },
   ];
 
@@ -109,7 +170,7 @@ export default function HomePage() {
               className="lg:col-span-7 space-y-6 text-center lg:text-left"
             >
               {/* Soft Emerald Pill Badge */}
-              <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-900 text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full shadow-sm border border-emerald-300/60">
+              <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-900 text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full shadow-xs border border-emerald-300/60">
                 <Sparkles className="w-4 h-4 text-emerald-700" />
                 <span>Pendaftaran Siswa Baru Tahun Ajaran 2027/2028</span>
               </div>
@@ -127,21 +188,27 @@ export default function HomePage() {
                 Raudhatul Athfal (RA) Assalaamah Cakung, Jakarta Timur. Pendidikan usia dini berlandaskan Al-Qur&apos;an, metode Tilawati, tahfidz Juz 30, dan pembiasaan adab Islami yang menggembirakan.
               </p>
 
-              {/* Buttons */}
+              {/* Buttons with Arc UI Micro-Springs */}
               <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-                <a
+                <motion.a
+                  whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+                  whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+                  transition={motionTokens.spring.snappy}
                   href="#formulir"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-base px-8 py-4 rounded-full shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-base px-8 py-4 rounded-full shadow-lg transition-all"
                 >
                   <Sparkles className="w-5 h-5 text-slate-950" />
                   <span>Daftar Sekarang</span>
-                </a>
-                <a
+                </motion.a>
+                <motion.a
+                  whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
+                  whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+                  transition={motionTokens.spring.snappy}
                   href="#biaya"
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/30 backdrop-blur-md font-bold text-base px-7 py-4 rounded-full transition-all"
                 >
                   <span>💰 Rincian Biaya &amp; Alur</span>
-                </a>
+                </motion.a>
               </div>
 
               {/* Mini Social Trust */}
@@ -170,7 +237,6 @@ export default function HomePage() {
             >
               {/* Photo Container with Yellow Accent */}
               <div className="relative w-72 sm:w-88 lg:w-full max-w-md mx-auto">
-                {/* Decorative background shape */}
                 <div className="absolute -inset-2 bg-gradient-to-tr from-amber-400 via-emerald-400 to-blue-400 rounded-3xl blur-md opacity-40 animate-pulse" />
                 
                 <div className="relative rounded-3xl border-4 border-amber-400 shadow-2xl overflow-hidden bg-slate-900 aspect-4/5">
@@ -182,7 +248,11 @@ export default function HomePage() {
                 </div>
 
                 {/* Floating Card 1: Emerald Green Badge (Tilawati) */}
-                <div className="absolute -bottom-5 left-0 sm:-left-6 bg-emerald-600 text-white rounded-2xl p-3 sm:p-4 shadow-xl flex items-center gap-2.5 sm:gap-3 border-2 border-white backdrop-blur-sm z-20 max-w-[85%] sm:max-w-none">
+                <motion.div
+                  whileHover={shouldReduceMotion ? {} : { y: -4 }}
+                  transition={motionTokens.spring.snappy}
+                  className="absolute -bottom-5 left-0 sm:-left-6 bg-emerald-600 text-white rounded-2xl p-3 sm:p-4 shadow-xl flex items-center gap-2.5 sm:gap-3 border-2 border-white backdrop-blur-sm z-20 max-w-[85%] sm:max-w-none"
+                >
                   <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/20 flex items-center justify-center text-lg sm:text-xl shrink-0">
                     📖
                   </div>
@@ -190,10 +260,14 @@ export default function HomePage() {
                     <p className="text-[10px] font-bold text-emerald-100 uppercase tracking-wider">Ciri Khas</p>
                     <p className="text-xs sm:text-sm font-extrabold text-white leading-tight">Tilawati &amp; Tahfidz Juz 30</p>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Floating Card 2: White/Amber Badge (Akreditasi) */}
-                <div className="absolute -top-4 right-0 sm:-right-6 bg-white text-slate-900 rounded-2xl p-3 sm:p-4 shadow-xl flex items-center gap-2.5 sm:gap-3 border border-amber-200 z-20 max-w-[85%] sm:max-w-none">
+                <motion.div
+                  whileHover={shouldReduceMotion ? {} : { y: -4 }}
+                  transition={motionTokens.spring.snappy}
+                  className="absolute -top-4 right-0 sm:-right-6 bg-white text-slate-900 rounded-2xl p-3 sm:p-4 shadow-xl flex items-center gap-2.5 sm:gap-3 border border-amber-200 z-20 max-w-[85%] sm:max-w-none"
+                >
                   <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
                     <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-amber-500 text-amber-500" />
                   </div>
@@ -201,7 +275,7 @@ export default function HomePage() {
                     <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Izin Resmi Kemenag</p>
                     <p className="text-xs sm:text-sm font-extrabold text-blue-950 leading-tight">Terakreditasi Baik</p>
                   </div>
-                </div>
+                </motion.div>
               </div>
             </motion.div>
 
@@ -211,10 +285,14 @@ export default function HomePage() {
 
       {/* 3. OVERLAPPING 4-COLUMN STATS BAR */}
       <section className="-mt-14 relative z-20 max-w-6xl mx-auto px-4 sm:px-6 w-full">
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 sm:p-8 grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        <div className="bg-white rounded-2xl shadow-xl border border-slate-200/90 p-6 sm:p-8 grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           
           {/* Stat 1: Soft Blue */}
-          <div className="flex items-center gap-4">
+          <motion.div
+            whileHover={shouldReduceMotion ? {} : { y: -2 }}
+            transition={motionTokens.spring.snappy}
+            className="flex items-center gap-4"
+          >
             <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
               <Users className="w-6 h-6" />
             </div>
@@ -222,10 +300,14 @@ export default function HomePage() {
               <p className="text-xl sm:text-2xl font-extrabold text-blue-900">4 – 6 Th</p>
               <p className="text-xs font-semibold text-slate-500">Kelompok A &amp; B</p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Stat 2: Soft Green */}
-          <div className="flex items-center gap-4">
+          <motion.div
+            whileHover={shouldReduceMotion ? {} : { y: -2 }}
+            transition={motionTokens.spring.snappy}
+            className="flex items-center gap-4"
+          >
             <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
               <BookOpen className="w-6 h-6" />
             </div>
@@ -233,10 +315,14 @@ export default function HomePage() {
               <p className="text-xl sm:text-2xl font-extrabold text-emerald-800">Tilawati</p>
               <p className="text-xs font-semibold text-slate-500">Tahfidz Juz 30</p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Stat 3: Soft Yellow */}
-          <div className="flex items-center gap-4">
+          <motion.div
+            whileHover={shouldReduceMotion ? {} : { y: -2 }}
+            transition={motionTokens.spring.snappy}
+            className="flex items-center gap-4"
+          >
             <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
               <Clock className="w-6 h-6" />
             </div>
@@ -244,10 +330,14 @@ export default function HomePage() {
               <p className="text-xl sm:text-2xl font-extrabold text-amber-900">5 Hari</p>
               <p className="text-xs font-semibold text-slate-500">Senin – Jumat Pagi</p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Stat 4: Soft Green */}
-          <div className="flex items-center gap-4">
+          <motion.div
+            whileHover={shouldReduceMotion ? {} : { y: -2 }}
+            transition={motionTokens.spring.snappy}
+            className="flex items-center gap-4"
+          >
             <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
               <Calendar className="w-6 h-6" />
             </div>
@@ -255,7 +345,7 @@ export default function HomePage() {
               <p className="text-xl sm:text-2xl font-extrabold text-emerald-800">2 Gelombang</p>
               <p className="text-xs font-semibold text-slate-500">Okt 2026 – Apr 2027</p>
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </section>
@@ -289,18 +379,18 @@ export default function HomePage() {
             />
 
             <div className="grid grid-cols-2 gap-4 relative z-10">
-              <div className="rounded-2xl overflow-hidden shadow-md border-2 border-emerald-100">
+              <motion.div whileHover={shouldReduceMotion ? {} : { scale: 1.02 }} className="rounded-2xl overflow-hidden shadow-md border-2 border-emerald-100">
                 <SmartPhoto baseName="activity-1" alt="Belajar Mengaji Tilawati" aspect="aspect-square" />
-              </div>
-              <div className="rounded-2xl overflow-hidden shadow-md border-2 border-amber-100 mt-6">
+              </motion.div>
+              <motion.div whileHover={shouldReduceMotion ? {} : { scale: 1.02 }} className="rounded-2xl overflow-hidden shadow-md border-2 border-amber-100 mt-6">
                 <SmartPhoto baseName="activity-2" alt="Praktek Sholat & Ibadah" aspect="aspect-square" />
-              </div>
-              <div className="rounded-2xl overflow-hidden shadow-md border-2 border-blue-100 -mt-6">
+              </motion.div>
+              <motion.div whileHover={shouldReduceMotion ? {} : { scale: 1.02 }} className="rounded-2xl overflow-hidden shadow-md border-2 border-blue-100 -mt-6">
                 <SmartPhoto baseName="activity-3" alt="Eksplorasi Sains & Kreasi" aspect="aspect-square" />
-              </div>
-              <div className="rounded-2xl overflow-hidden shadow-md border-2 border-emerald-100">
+              </motion.div>
+              <motion.div whileHover={shouldReduceMotion ? {} : { scale: 1.02 }} className="rounded-2xl overflow-hidden shadow-md border-2 border-emerald-100">
                 <SmartPhoto baseName="activity-4" alt="Bermain Motorik & Ketangkasan" aspect="aspect-square" />
-              </div>
+              </motion.div>
             </div>
           </motion.div>
 
@@ -358,37 +448,9 @@ export default function HomePage() {
               ))}
             </div>
 
-            {/* Collapsible Visi & Misi (Dokumen KSP) */}
-            <div className="pt-4 border-t border-slate-200">
-              <details className="group bg-slate-50 rounded-xl p-4 border border-slate-200">
-                <summary className="cursor-pointer font-bold text-blue-900 text-sm flex items-center justify-between list-none">
-                  <span className="flex items-center gap-2">
-                    <span>📜 Visi &amp; 7 Misi RA Assalaamah</span>
-                    <span className="text-xs font-normal text-slate-500">(ketuk untuk membaca)</span>
-                  </span>
-                  <ChevronDown className="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" />
-                </summary>
-                <div className="mt-4 space-y-3 text-xs sm:text-sm text-slate-700 border-t border-slate-200 pt-3">
-                  <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
-                    <p className="font-bold text-emerald-900">Visi:</p>
-                    <p className="italic text-emerald-800 mt-0.5">
-                      &ldquo;Mempersiapkan Generasi yang Beriman, Berilmu, Berakhlak, dan Beramal Salihah&rdquo;
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-bold text-blue-900 mb-1">Misi (7 Butir):</p>
-                    <ol className="list-decimal pl-5 space-y-1 text-slate-600">
-                      <li>Membina anak sejak dini dalam mengenal Allah Swt. dan meneladani Rasulullah saw. berdasarkan Al-Qur&apos;an dan hadis sesuai pemahaman ulama salafussalih;</li>
-                      <li>Mengenalkan dan membiasakan nilai-nilai Islami dalam kehidupan sehari-hari;</li>
-                      <li>Menghargai dan menggali potensi kecerdasan majemuk setiap anak melalui kegiatan bermain beragam;</li>
-                      <li>Menciptakan taman bermain kondusif, aktif, kreatif, berkesadaran, dan menggembirakan;</li>
-                      <li>Mempersiapkan kecakapan hidup (life skills) dan kemandirian anak memasuki jenjang berikutnya;</li>
-                      <li>Mengintegrasikan tujuh nilai Panca Cinta dalam pembelajaran dan budaya madrasah; dan</li>
-                      <li>Membangun kemitraan harmonis dengan orang tua, yayasan, dan masyarakat.</li>
-                    </ol>
-                  </div>
-                </div>
-              </details>
+            {/* ArcAccordion Visi & Misi (Dokumen KSP) */}
+            <div className="pt-2">
+              <ArcAccordion items={visiMisiItems} variant="separated" />
             </div>
 
           </motion.div>
@@ -396,8 +458,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. PROGRAM UNGGULAN (3-Column Color-Coded Cards) */}
-      <section id="program" className="bg-slate-50 py-20 lg:py-28 border-y border-slate-200/80">
+      {/* 5. PROGRAM UNGGULAN (3-Column Color-Coded Cards dengan Arc UI Spring Hover) */}
+      <section id="program" className="bg-slate-50/80 py-20 lg:py-28 border-y border-slate-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-14">
@@ -415,9 +477,13 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
             {/* Card 1: Tahfidz & Tilawati (Emerald Green Accent) */}
-            <div className="rounded-2xl bg-white shadow-md hover:shadow-xl transition-all p-7 border-t-4 border-emerald-500 flex flex-col justify-between border-x border-b border-slate-200/70">
+            <motion.div
+              whileHover={shouldReduceMotion ? {} : { y: -6 }}
+              transition={motionTokens.spring.smooth}
+              className="rounded-2xl bg-white shadow-md hover:shadow-xl transition-shadow p-7 border-t-4 border-emerald-500 flex flex-col justify-between border-x border-b border-slate-200/70"
+            >
               <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl">
+                <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl shadow-xs">
                   📖
                 </div>
                 <span className="inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">
@@ -445,12 +511,16 @@ export default function HomePage() {
               <div className="mt-6 pt-4 border-t border-slate-100 text-xs font-bold text-emerald-700">
                 Kelompok A &amp; B · Tiap Hari
               </div>
-            </div>
+            </motion.div>
 
             {/* Card 2: Sentra & Sains Anak (Royal Blue Accent) */}
-            <div className="rounded-2xl bg-white shadow-md hover:shadow-xl transition-all p-7 border-t-4 border-blue-600 flex flex-col justify-between border-x border-b border-slate-200/70">
+            <motion.div
+              whileHover={shouldReduceMotion ? {} : { y: -6 }}
+              transition={motionTokens.spring.smooth}
+              className="rounded-2xl bg-white shadow-md hover:shadow-xl transition-shadow p-7 border-t-4 border-blue-600 flex flex-col justify-between border-x border-b border-slate-200/70"
+            >
               <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-2xl">
+                <div className="w-14 h-14 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-2xl shadow-xs">
                   🧪
                 </div>
                 <span className="inline-block bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">
@@ -478,12 +548,16 @@ export default function HomePage() {
               <div className="mt-6 pt-4 border-t border-slate-100 text-xs font-bold text-blue-700">
                 Kecerdasan Majemuk Anak
               </div>
-            </div>
+            </motion.div>
 
             {/* Card 3: Ekstrakurikuler & Pembiasaan (Amber Yellow Accent) */}
-            <div className="rounded-2xl bg-white shadow-md hover:shadow-xl transition-all p-7 border-t-4 border-amber-500 flex flex-col justify-between border-x border-b border-slate-200/70">
+            <motion.div
+              whileHover={shouldReduceMotion ? {} : { y: -6 }}
+              transition={motionTokens.spring.smooth}
+              className="rounded-2xl bg-white shadow-md hover:shadow-xl transition-shadow p-7 border-t-4 border-amber-500 flex flex-col justify-between border-x border-b border-slate-200/70"
+            >
               <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl">
+                <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl shadow-xs">
                   🏕️
                 </div>
                 <span className="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">
@@ -511,7 +585,7 @@ export default function HomePage() {
               <div className="mt-6 pt-4 border-t border-slate-100 text-xs font-bold text-amber-700">
                 Pengalaman Belajar Nyata
               </div>
-            </div>
+            </motion.div>
 
           </div>
 
@@ -534,8 +608,11 @@ export default function HomePage() {
 
         {/* Jadwal 2 Gelombang */}
         <div className="grid sm:grid-cols-2 gap-4 mb-8">
-          <div className="rounded-2xl p-6 border-2 border-emerald-500/40 bg-emerald-50/60 shadow-xs flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xl shrink-0">
+          <motion.div
+            whileHover={shouldReduceMotion ? {} : { y: -2 }}
+            className="rounded-2xl p-6 border-2 border-emerald-500/40 bg-emerald-50/60 shadow-xs flex items-start gap-4"
+          >
+            <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xl shrink-0 shadow-xs">
               1️⃣
             </div>
             <div>
@@ -549,10 +626,13 @@ export default function HomePage() {
                 Disarankan mendaftar lebih awal karena kuota kelas terbatas.
               </p>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="rounded-2xl p-6 border-2 border-amber-500/40 bg-amber-50/60 shadow-xs flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center text-xl shrink-0">
+          <motion.div
+            whileHover={shouldReduceMotion ? {} : { y: -2 }}
+            className="rounded-2xl p-6 border-2 border-amber-500/40 bg-amber-50/60 shadow-xs flex items-start gap-4"
+          >
+            <div className="w-12 h-12 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center text-xl shrink-0 shadow-xs">
               2️⃣
             </div>
             <div>
@@ -566,14 +646,14 @@ export default function HomePage() {
                 Akan ditutup sewaktu-waktu jika kapasitas rombel telah terpenuhi.
               </p>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Biaya Card */}
         <div className="section-card p-6 sm:p-8 space-y-6">
           <BiayaTable />
 
-          <div className="bg-slate-50 rounded-xl p-5 border border-slate-200 text-xs sm:text-sm text-slate-700 space-y-2.5">
+          <div className="bg-slate-50/80 rounded-2xl p-5 border border-slate-200 text-xs sm:text-sm text-slate-700 space-y-2.5">
             <p className="font-bold text-blue-900 text-sm">Ketentuan Pendaftaran:</p>
             <ol className="list-decimal pl-5 space-y-1.5 leading-relaxed">
               <li>Biaya pendaftaran <strong>Rp200.000</strong>.</li>
@@ -608,7 +688,7 @@ export default function HomePage() {
       </section>
 
       {/* 7. FASILITAS & GALERI KEGIATAN (Masonry/Bento Grid) */}
-      <section id="galeri" className="bg-slate-50 py-20 lg:py-28 border-t border-slate-200">
+      <section id="galeri" className="bg-slate-50/80 py-20 lg:py-28 border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-14">
@@ -626,51 +706,67 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             
             {/* Photo 1 */}
-            <div className="group relative rounded-2xl overflow-hidden shadow-md bg-white border border-slate-200 aspect-4/3 cursor-pointer">
+            <motion.div
+              whileHover={shouldReduceMotion ? {} : { y: -4 }}
+              transition={motionTokens.spring.snappy}
+              className="group relative rounded-2xl overflow-hidden shadow-md bg-white border border-slate-200 aspect-4/3 cursor-pointer"
+            >
               <SmartPhoto baseName="gallery-1" alt="Ruang Kelas Nyaman Ber-AC" aspect="w-full h-full" />
               <div className="absolute inset-0 bg-gradient-to-t from-blue-950/85 via-emerald-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
                 <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider">Fasilitas</span>
                 <p className="text-base font-bold">Ruang Kelas Nyaman &amp; Ber-AC</p>
                 <p className="text-xs text-slate-200 mt-0.5">Suasana belajar kondusif dan bersih</p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Photo 2 */}
-            <div className="group relative rounded-2xl overflow-hidden shadow-md bg-white border border-slate-200 aspect-4/3 cursor-pointer">
+            <motion.div
+              whileHover={shouldReduceMotion ? {} : { y: -4 }}
+              transition={motionTokens.spring.snappy}
+              className="group relative rounded-2xl overflow-hidden shadow-md bg-white border border-slate-200 aspect-4/3 cursor-pointer"
+            >
               <SmartPhoto baseName="gallery-2" alt="Area Bermain Outdoor Aman" aspect="w-full h-full" />
               <div className="absolute inset-0 bg-gradient-to-t from-blue-950/85 via-emerald-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
                 <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider">Outdoor</span>
                 <p className="text-base font-bold">Area Bermain &amp; Ketangkasan</p>
                 <p className="text-xs text-slate-200 mt-0.5">Taman ramah anak berpagar aman</p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Photo 3 */}
-            <div className="group relative rounded-2xl overflow-hidden shadow-md bg-white border border-slate-200 aspect-4/3 cursor-pointer">
+            <motion.div
+              whileHover={shouldReduceMotion ? {} : { y: -4 }}
+              transition={motionTokens.spring.snappy}
+              className="group relative rounded-2xl overflow-hidden shadow-md bg-white border border-slate-200 aspect-4/3 cursor-pointer"
+            >
               <SmartPhoto baseName="gallery-3" alt="Pojok Baca & Perpustakaan" aspect="w-full h-full" />
               <div className="absolute inset-0 bg-gradient-to-t from-blue-950/85 via-emerald-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
                 <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider">Literasi</span>
                 <p className="text-base font-bold">Pojok Baca &amp; Cerita Islami</p>
                 <p className="text-xs text-slate-200 mt-0.5">Buku bergambar adab &amp; kisah nabi</p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Photo 4 */}
-            <div className="group relative rounded-2xl overflow-hidden shadow-md bg-white border border-slate-200 aspect-4/3 cursor-pointer">
+            <motion.div
+              whileHover={shouldReduceMotion ? {} : { y: -4 }}
+              transition={motionTokens.spring.snappy}
+              className="group relative rounded-2xl overflow-hidden shadow-md bg-white border border-slate-200 aspect-4/3 cursor-pointer"
+            >
               <SmartPhoto baseName="gallery-4" alt="Praktik Ibadah & Manasik" aspect="w-full h-full" />
               <div className="absolute inset-0 bg-gradient-to-t from-blue-950/85 via-emerald-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
                 <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider">Kegiatan</span>
                 <p className="text-base font-bold">Praktik Ibadah &amp; Manasik</p>
                 <p className="text-xs text-slate-200 mt-0.5">Mengenal rukun Islam sejak dini</p>
               </div>
-            </div>
+            </motion.div>
 
           </div>
 
         </div>
       </section>
 
-      {/* 8. ALUR PENDAFTARAN PPDB (Horizontal Stepper) */}
+      {/* 8. ALUR PENDAFTARAN PPDB (ArcStepper) */}
       <section id="alur" className="py-20 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto space-y-3 mb-16">
           <span className="inline-block bg-blue-100 text-blue-900 text-xs font-extrabold uppercase px-3.5 py-1.5 rounded-full tracking-wider">
@@ -684,54 +780,8 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* 4 Connected Steps using Alternating Blue, Green, Yellow */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
-          
-          {/* Step 1: Royal Blue */}
-          <div className="relative text-center flex flex-col items-center">
-            <div className="w-16 h-16 rounded-full bg-blue-900 text-white flex items-center justify-center text-xl font-extrabold shadow-lg mb-4 ring-4 ring-blue-100">
-              1
-            </div>
-            <h3 className="text-base font-bold text-slate-900 mb-1">Isi Formulir Online</h3>
-            <p className="text-xs text-slate-600 leading-relaxed max-w-xs">
-              Lengkapi 39 data calon murid sesuai Kartu Keluarga (KK) dan Akta Kelahiran pada formulir di bawah.
-            </p>
-          </div>
-
-          {/* Step 2: Emerald Green */}
-          <div className="relative text-center flex flex-col items-center">
-            <div className="w-16 h-16 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xl font-extrabold shadow-lg mb-4 ring-4 ring-emerald-100">
-              2
-            </div>
-            <h3 className="text-base font-bold text-slate-900 mb-1">Konfirmasi WhatsApp</h3>
-            <p className="text-xs text-slate-600 leading-relaxed max-w-xs">
-              Setelah kirim, sistem otomatis menerbitkan Nomor Registrasi dan tombol kirim bukti ke WhatsApp panitia.
-            </p>
-          </div>
-
-          {/* Step 3: Amber Yellow */}
-          <div className="relative text-center flex flex-col items-center">
-            <div className="w-16 h-16 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-xl font-extrabold shadow-lg mb-4 ring-4 ring-amber-100">
-              3
-            </div>
-            <h3 className="text-base font-bold text-slate-900 mb-1">Serahkan Berkas</h3>
-            <p className="text-xs text-slate-600 leading-relaxed max-w-xs">
-              Serahkan fotokopi KK, Akta, KTP ortu, dan 3 lembar pas foto 3x4 ke kantor RA Assalaamah.
-            </p>
-          </div>
-
-          {/* Step 4: Emerald Green / Blue */}
-          <div className="relative text-center flex flex-col items-center">
-            <div className="w-16 h-16 rounded-full bg-blue-900 text-white flex items-center justify-center text-xl font-extrabold shadow-lg mb-4 ring-4 ring-blue-100">
-              4
-            </div>
-            <h3 className="text-base font-bold text-slate-900 mb-1">Bayar 50% &amp; Seragam</h3>
-            <p className="text-xs text-slate-600 leading-relaxed max-w-xs">
-              Membayar administrasi minimal 50%, ambil seragam anak, dan siap menyambut tahun ajaran baru!
-            </p>
-          </div>
-
-        </div>
+        {/* ArcStepper Component */}
+        <ArcStepper steps={alurSteps} currentStep={1} />
       </section>
 
       {/* 9. FORMULIR PENDAFTARAN (PPDB ONLINE) */}
@@ -756,7 +806,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 10. TANYA JAWAB (FAQ) */}
+      {/* 10. TANYA JAWAB (ArcAccordion FAQ) */}
       <section id="faq" className="py-20 lg:py-24 max-w-4xl mx-auto px-4 sm:px-6 w-full">
         <div className="text-center space-y-3 mb-12">
           <span className="inline-block bg-blue-100 text-blue-900 text-xs font-extrabold uppercase px-3.5 py-1.5 rounded-full tracking-wider">
@@ -770,30 +820,8 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="divide-y divide-slate-200 border-y border-slate-200">
-          {faqs.map((faq, idx) => (
-            <div key={idx} className="py-4">
-              <button
-                type="button"
-                onClick={() => toggleFaq(idx)}
-                className="w-full text-left font-bold text-slate-900 text-base flex justify-between items-center py-2 hover:text-emerald-700 transition"
-                aria-expanded={openFaq === idx}
-              >
-                <span>{faq.q}</span>
-                <ChevronDown
-                  className={`w-5 h-5 text-slate-400 transition-transform ${
-                    openFaq === idx ? "rotate-180 text-emerald-600" : ""
-                  }`}
-                />
-              </button>
-              {openFaq === idx && (
-                <p className="text-sm text-slate-600 mt-2 leading-relaxed animate-in fade-in duration-200 pr-6">
-                  {faq.a}
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
+        {/* ArcAccordion Component untuk FAQ */}
+        <ArcAccordion items={faqItems} defaultOpen="faq-usia" variant="separated" />
       </section>
 
       {/* 11. PRE-FOOTER CTA BANNER */}
@@ -813,21 +841,27 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto shrink-0 justify-center">
-            <a
+            <motion.a
+              whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+              whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+              transition={motionTokens.spring.snappy}
               href={`https://wa.me/${formatWAForLink(CONFIG.ADMIN_WA)}?text=Assalamu%27alaikum%20Panitia%20PPDB%20RA%20Assalaamah%2C%20saya%20ingin%20bertanya%20mengenai%20pendaftaran`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-sm sm:text-base px-7 py-3.5 rounded-full shadow-lg transition active:scale-95"
+              className="inline-flex items-center justify-center gap-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-sm sm:text-base px-7 py-3.5 rounded-full shadow-lg transition"
             >
               <MessageCircle className="w-5 h-5" />
               <span>Chat WhatsApp Panitia</span>
-            </a>
-            <a
+            </motion.a>
+            <motion.a
+              whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
+              whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+              transition={motionTokens.spring.snappy}
               href="#formulir"
               className="inline-flex items-center justify-center gap-2 bg-white/15 hover:bg-white/25 text-white border border-white/40 font-bold text-sm sm:text-base px-6 py-3.5 rounded-full transition"
             >
               <span>Langsung Daftar →</span>
-            </a>
+            </motion.a>
           </div>
 
         </div>
@@ -918,18 +952,21 @@ export default function HomePage() {
       {/* 13. FLOATING WHATSAPP & QUICK ACTION BUTTONS */}
       {/* Floating Emerald WhatsApp Button */}
       <div className="fixed bottom-6 right-6 z-40 hidden sm:block">
-        <a
+        <motion.a
+          whileHover={shouldReduceMotion ? {} : { scale: 1.05 }}
+          whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
+          transition={motionTokens.spring.snappy}
           href={`https://wa.me/${formatWAForLink(CONFIG.ADMIN_WA)}?text=Assalamu%27alaikum%20Panitia%20PPDB%20RA%20Assalaamah%2C%20saya%20ingin%20konsultasi%20pendaftaran`}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex items-center gap-2.5 bg-emerald-600 hover:bg-emerald-500 text-white p-3.5 rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95"
+          className="group flex items-center gap-2.5 bg-emerald-600 hover:bg-emerald-500 text-white p-3.5 rounded-full shadow-2xl transition-all"
           aria-label="Hubungi WhatsApp Panitia"
         >
           <MessageCircle className="w-6 h-6" />
           <span className="max-w-0 overflow-hidden whitespace-nowrap font-bold text-xs group-hover:max-w-xs transition-all duration-300">
             Konsultasi WhatsApp
           </span>
-        </a>
+        </motion.a>
       </div>
 
       {/* Floating Mobile Bottom Action */}
