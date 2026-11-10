@@ -1,77 +1,91 @@
 @import "tailwindcss";
 
-/* ---- Variabel warna RA Assalaamah ---- */
+/* ---- Variabel warna RA Assalaamah Modern ---- */
 @theme inline {
-  --color-ra-50: #eefbf3;
-  --color-ra-100: #d6f5e3;
-  --color-ra-500: #1b7a43;
-  --color-ra-600: #146c38;
-  --color-ra-700: #0f532b;
-  --color-ra-800: #0a3b1e;
+  --color-navy-900: #1e3a8a;
+  --color-navy-950: #0f172a;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+  --color-amber-600: #d97706;
   --font-sans: var(--font-pjs);
 }
 
 /* ---- Dasar ---- */
-html { scroll-behavior: smooth; }
-body { font-family: var(--font-sans), system-ui, sans-serif; background: #f8fafc; color: #1e293b; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body { font-family: var(--font-sans), system-ui, sans-serif; background: #ffffff; color: #1e293b; overflow-x: hidden; width: 100%; max-width: 100%; }
 
 /* ---- Input / Label ---- */
-.field-label { display: block; font-size: .75rem; font-weight: 700; color: #334155; margin-bottom: .3rem; }
+.field-label { display: block; font-size: .8rem; font-weight: 700; color: #1e293b; margin-bottom: .35rem; }
 .field-input {
-  width: 100%; min-height: 44px; border: 1.5px solid #cbd5e1; border-radius: .75rem;
+  width: 100%; min-height: 46px; border: 1.5px solid #cbd5e1; border-radius: .75rem;
   background: #fff; padding: .625rem .875rem; font-size: 16px; line-height: 1.4;
-  transition: border-color .15s, outline .15s;
+  transition: border-color .15s, box-shadow .15s;
 }
-.field-input:focus { outline: 2.5px solid #146c38; outline-offset: 0; border-color: #146c38; }
-textarea.field-input { min-height: 72px; resize: vertical; }
-.req { color: #f43f5e; }
-.digit-badge { font-size: 11px; font-weight: 600; color: #94a3b8; }
+.field-input:focus { outline: none; border-color: #059669; box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.18); }
+textarea.field-input { min-height: 76px; resize: vertical; }
+.req { color: #f43f5e; font-weight: 800; }
+.digit-badge { font-size: 11px; font-weight: 700; color: #64748b; }
 
 /* ---- Section card ---- */
-.section-card { background: #fff; border-radius: 1rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,.05); overflow: hidden; }
-.section-head { background: #146c38; color: #fff; padding: .875rem 1.25rem; display: flex; align-items: center; justify-content: space-between; }
-.section-foot { padding: .875rem 1.25rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: .75rem; }
+.section-card { background: #fff; border-radius: 1.25rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(15, 23, 42, .04); overflow: hidden; }
+.section-head { background: linear-gradient(135deg, #1e3a8a, #1e40af); color: #fff; padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; }
+.section-foot { padding: 1rem 1.25rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: .75rem; }
 
 /* ---- Buttons ---- */
-.btn-primary { background: #146c38; color: #fff; font-weight: 700; font-size: .875rem; padding: .7rem 1.25rem; border-radius: .75rem; min-height: 44px; transition: background .15s; cursor: pointer; }
-.btn-primary:hover { background: #0f532b; }
-.btn-primary:disabled { opacity: .6; cursor: not-allowed; }
-.btn-secondary { background: #e2e8f0; color: #334155; font-weight: 700; font-size: .875rem; padding: .7rem 1rem; border-radius: .75rem; min-height: 44px; transition: background .15s; cursor: pointer; }
-.btn-secondary:hover { background: #cbd5e1; }
+.btn-primary {
+  background: #f59e0b; color: #020617; font-weight: 800; font-size: .875rem;
+  padding: .75rem 1.35rem; border-radius: .75rem; min-height: 44px;
+  transition: all .15s; cursor: pointer; box-shadow: 0 2px 8px rgba(245, 158, 11, .35);
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+}
+.btn-primary:hover { background: #d97706; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(245, 158, 11, .45); }
+.btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 
-/* ---- Stat card (admin) ---- */
-.stat-card { background: #fff; padding: 1rem; border-radius: 1rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
-.stat-label { font-size: .75rem; color: #64748b; font-weight: 600; }
+.btn-secondary {
+  background: #f1f5f9; color: #1e293b; font-weight: 700; font-size: .875rem;
+  padding: .75rem 1.15rem; border-radius: .75rem; min-height: 44px;
+  border: 1px solid #e2e8f0; transition: all .15s; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.btn-secondary:hover { background: #e2e8f0; }
 
 /* ---- Step tab ---- */
 .step-tab {
-  display: flex; align-items: center; gap: .625rem; padding: .75rem;
+  display: flex; align-items: center; gap: .625rem; padding: .75rem .875rem;
   border-radius: .75rem; border: 1.5px solid #e2e8f0; background: #fff;
-  color: #334155; text-align: left; transition: background .15s, border-color .15s;
-  cursor: pointer;
+  color: #334155; text-align: left; transition: all .15s;
+  cursor: pointer; font-size: .875rem;
 }
-.step-tab:hover { background: #f8fafc; }
+.step-tab:hover { background: #f8fafc; border-color: #cbd5e1; }
 .step-tab .step-num {
-  width: 1.75rem; height: 1.75rem; border-radius: .5rem; background: #f1f5f9;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: .75rem; flex-shrink: 0;
+  width: 1.85rem; height: 1.85rem; border-radius: .5rem; background: #eff6ff;
+  color: #1e3a8a; display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: .8rem; flex-shrink: 0;
 }
-.step-tab.step-active { background: #146c38; border-color: #146c38; color: #fff; }
-.step-tab.step-active .step-num { background: rgba(255,255,255,.2); }
+.step-tab.step-active {
+  background: #1e3a8a; border-color: #1e3a8a; color: #fff;
+  box-shadow: 0 2px 8px rgba(30, 58, 138, .25);
+}
+.step-tab.step-active .step-num {
+  background: #f59e0b; color: #020617;
+}
 
-/* ---- Kop surat bukti ---- */
-.kop-border { border-bottom: 3px solid #0a3b1e; }
-.kop-border::after { content: ""; display: block; border-bottom: 1px solid #0a3b1e; margin-top: 2px; }
+/* ---- Kop surat bukti cetak ---- */
+.kop-border { border-bottom: 3px solid #1e3a8a; }
+.kop-border::after { content: ""; display: block; border-bottom: 1px solid #1e3a8a; margin-top: 2px; }
 
 /* ---- Honeypot ---- */
 .hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
-/* ---- Motion respek ---- */
+/* ---- Motion ---- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
 
-/* ===================== CETAK BUKTI PENDAFTARAN ===================== */
+/* ===================== CETAK BUKTI PENDAFTARAN (A4) ===================== */
 @media print {
   @page { size: A4 portrait; margin: 0; }
   html, body { background: #fff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }

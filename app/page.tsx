@@ -1,12 +1,39 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import LogoImg from "@/components/LogoImg";
+import {
+  Sparkles,
+  Award,
+  CheckCircle2,
+  BookOpen,
+  Calendar,
+  Clock,
+  MapPin,
+  Mail,
+  Phone,
+  MessageCircle,
+  HelpCircle,
+  FileText,
+  HeartHandshake,
+  Users,
+  Compass,
+  ArrowRight,
+  ChevronDown,
+  ShieldCheck,
+  Star,
+  Check,
+} from "lucide-react";
+import Navbar from "@/components/Navbar";
+import SmartPhoto from "@/components/SmartPhoto";
 import BiayaTable from "@/components/BiayaTable";
 import PpdbForm from "@/components/PpdbForm";
 import { CONFIG, formatWAForLink } from "@/lib/config";
 
-const fadeUp = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
 
 function WALink({ raw, shown }: { raw: string; shown: string }) {
   return (
@@ -14,8 +41,7 @@ function WALink({ raw, shown }: { raw: string; shown: string }) {
       href={`https://wa.me/${formatWAForLink(raw)}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="font-bold hover:underline"
-      style={{ color: "#146c38" }}
+      className="font-bold text-emerald-600 hover:text-emerald-700 hover:underline"
     >
       {shown}
     </a>
@@ -23,255 +49,547 @@ function WALink({ raw, shown }: { raw: string; shown: string }) {
 }
 
 export default function HomePage() {
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  const toggleFaq = (index: number) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
+
+  const faqs = [
+    {
+      q: "Berapa usia anak yang diterima di RA Assalaamah?",
+      a: "Kelompok A untuk usia 4 s/d 5 tahun, dan Kelompok B untuk usia 5 s/d 6 tahun pada tahun ajaran berjalan.",
+    },
+    {
+      q: "Kapan jadwal pendaftaran dibuka?",
+      a: "Gelombang 1 dibuka Oktober 2026 hingga Januari 2027. Gelombang 2 dibuka Februari hingga April 2027.",
+    },
+    {
+      q: "Dokumen apa saja yang wajib disiapkan?",
+      a: "Fotokopi Akta Kelahiran, Fotokopi Kartu Keluarga (KK), Pas foto 3x4 (3 lembar), dan Fotokopi KTP Orang Tua. Dokumen yang sudah diupload di formulir ini tidak perlu difotokopi lagi.",
+    },
+    {
+      q: "Apakah ada tes seleksi masuk untuk calon anak?",
+      a: "Tidak ada tes penentu gugur/lulus. Kami hanya melakukan tes psikotes dasar ringan setelah masuk sekolah untuk pemetaan tumbuh kembang dan gaya belajar anak.",
+    },
+    {
+      q: "Bagaimana sistem pembayarannya?",
+      a: "Setelah mengisi formulir online dan mengembalikan berkas persyaratan ke sekolah, orang tua membayar administrasi sebanyak 50% sekaligus mengambil seragam anak.",
+    },
+  ];
+
   return (
-    <>
-      {/* ===== HEADER ===== */}
-      <header className="sticky top-0 z-40 no-print" style={{ background: "linear-gradient(to right, #0a3b1e, #146c38, #1b7a43)" }}>
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3.5">
-          <div className="w-14 h-14 rounded-full bg-white p-1 shadow-md flex items-center justify-center shrink-0 overflow-hidden ring-2 ring-amber-400">
-            <LogoImg size={48} className="w-full h-full object-contain" priority />
-          </div>
-          <div>
-            <span className="inline-block bg-amber-400 text-xs font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider" style={{ color: "#0a3b1e" }}>
-              PPDB Online 2027 / 2028
-            </span>
-            <h1 className="text-lg md:text-xl font-extrabold tracking-tight leading-snug text-white">
-              RAUDHATUL ATHFAL ASSALAAMAH
-            </h1>
-            <p className="text-xs" style={{ color: "#d6f5e3" }}>Formulir Pendaftaran Calon Peserta Didik Baru</p>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-white text-slate-800 flex flex-col selection:bg-amber-200 selection:text-slate-900 overflow-x-hidden w-full">
+      {/* 1. STICKY NAVBAR */}
+      <Navbar />
 
-      {/* ===== HERO ===== */}
-      <section style={{ background: "linear-gradient(135deg, #0a3b1e 0%, #146c38 50%, #1b7a43 100%)" }} className="relative overflow-hidden py-16 px-4">
-        {/* dekorasi lingkaran */}
-        <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full opacity-10" style={{ background: "#d6f5e3" }} />
-        <div className="absolute -bottom-10 -left-10 w-60 h-60 rounded-full opacity-10" style={{ background: "#d6f5e3" }} />
+      {/* 2. HERO SECTION (Royal Navy Blue Theme) */}
+      <section className="relative bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 text-white overflow-hidden pt-10 pb-28 lg:pt-16 lg:pb-36">
+        {/* Subtle geometric & doodle pattern overlay */}
+        <div
+          className="absolute inset-0 opacity-10 pointer-events-none"
+          style={{
+            backgroundImage: `radial-gradient(#ffffff 1.5px, transparent 1.5px), radial-gradient(#38bdf8 1.5px, transparent 1.5px)`,
+            backgroundSize: "32px 32px",
+            backgroundPosition: "0 0, 16px 16px",
+          }}
+        />
+        {/* Glow circles */}
+        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-emerald-500/20 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-amber-400/15 blur-3xl pointer-events-none" />
 
-        <div className="max-w-4xl mx-auto relative z-10 text-center text-white">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="flex justify-center mb-5"
-          >
-            <div className="w-28 h-28 rounded-full bg-white p-2 shadow-xl ring-4 ring-amber-400 flex items-center justify-center overflow-hidden">
-              <LogoImg size={96} className="w-full h-full object-contain" priority />
-            </div>
-          </motion.div>
-
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-2xl md:text-4xl font-extrabold leading-tight"
-          >
-            Selamat Datang di PPDB
-            <br />
-            <span className="text-amber-300">RA Assalaamah</span>
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.35 }}
-            className="mt-3 text-base md:text-lg max-w-xl mx-auto"
-            style={{ color: "#d6f5e3" }}
-          >
-            Penerimaan Peserta Didik Baru Tahun Ajaran 2027/2028.
-            <br className="hidden md:block" />
-            Daftarkan putra-putri Anda sekarang, mudah dan aman dari HP.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="mt-6 flex flex-col sm:flex-row gap-3 justify-center"
-          >
-            <a
-              href="#formulir"
-              className="inline-flex items-center justify-center gap-2 font-extrabold text-sm px-7 py-3.5 rounded-xl min-h-[48px] transition shadow-lg"
-              style={{ background: "#f59e0b", color: "#0a3b1e" }}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            
+            {/* Left Column: Headlines & CTA */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="lg:col-span-7 space-y-6 text-center lg:text-left"
             >
-              ✍️ Daftar Sekarang
-            </a>
-            <a
-              href="#biaya"
-              className="inline-flex items-center justify-center gap-2 font-bold text-sm px-7 py-3.5 rounded-xl min-h-[48px] border-2 border-white/40 text-white transition hover:bg-white/10"
+              {/* Soft Emerald Pill Badge */}
+              <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-900 text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full shadow-sm border border-emerald-300/60">
+                <Sparkles className="w-4 h-4 text-emerald-700" />
+                <span>Pendaftaran Siswa Baru Tahun Ajaran 2027/2028</span>
+              </div>
+
+              {/* Bold Headline with Sunny Yellow Highlight */}
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight sm:leading-tight">
+                Membina Generasi Cerdas, Ceria &amp;{" "}
+                <span className="text-amber-400 underline decoration-amber-400/80 decoration-wavy decoration-2 sm:decoration-4">
+                  Berakhlak Mulia
+                </span>
+              </h1>
+
+              {/* Light Blue Subheadline */}
+              <p className="text-blue-100 text-base sm:text-lg lg:text-xl font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                Raudhatul Athfal (RA) Assalaamah Cakung, Jakarta Timur. Pendidikan usia dini berlandaskan Al-Qur&apos;an, metode Tilawati, tahfidz Juz 30, dan pembiasaan adab Islami yang menggembirakan.
+              </p>
+
+              {/* Buttons */}
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                <a
+                  href="#formulir"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-base px-8 py-4 rounded-full shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all"
+                >
+                  <Sparkles className="w-5 h-5 text-slate-950" />
+                  <span>Daftar Sekarang</span>
+                </a>
+                <a
+                  href="#biaya"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/30 backdrop-blur-md font-bold text-base px-7 py-4 rounded-full transition-all"
+                >
+                  <span>💰 Rincian Biaya &amp; Alur</span>
+                </a>
+              </div>
+
+              {/* Mini Social Trust */}
+              <div className="pt-4 flex items-center justify-center lg:justify-start gap-6 text-xs text-blue-200">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <span>Metode Tilawati Resmi</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <span>Guru Berpengalaman</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <span>Ruang Ber-AC</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Right Column: Hero Photo & Floating Badges */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="lg:col-span-5 relative flex justify-center mt-6 lg:mt-0"
             >
-              💰 Lihat Biaya
-            </a>
-          </motion.div>
+              {/* Photo Container with Yellow Accent */}
+              <div className="relative w-72 sm:w-88 lg:w-full max-w-md mx-auto">
+                {/* Decorative background shape */}
+                <div className="absolute -inset-2 bg-gradient-to-tr from-amber-400 via-emerald-400 to-blue-400 rounded-3xl blur-md opacity-40 animate-pulse" />
+                
+                <div className="relative rounded-3xl border-4 border-amber-400 shadow-2xl overflow-hidden bg-slate-900 aspect-4/5">
+                  <SmartPhoto
+                    baseName="hero-student"
+                    alt="Siswa RA Assalaamah Ceria & Berakhlak"
+                    aspect="w-full h-full"
+                  />
+                </div>
+
+                {/* Floating Card 1: Emerald Green Badge (Tilawati) */}
+                <div className="absolute -bottom-5 left-0 sm:-left-6 bg-emerald-600 text-white rounded-2xl p-3 sm:p-4 shadow-xl flex items-center gap-2.5 sm:gap-3 border-2 border-white backdrop-blur-sm z-20 max-w-[85%] sm:max-w-none">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/20 flex items-center justify-center text-lg sm:text-xl shrink-0">
+                    📖
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-emerald-100 uppercase tracking-wider">Ciri Khas</p>
+                    <p className="text-xs sm:text-sm font-extrabold text-white leading-tight">Tilawati &amp; Tahfidz Juz 30</p>
+                  </div>
+                </div>
+
+                {/* Floating Card 2: White/Amber Badge (Akreditasi) */}
+                <div className="absolute -top-4 right-0 sm:-right-6 bg-white text-slate-900 rounded-2xl p-3 sm:p-4 shadow-xl flex items-center gap-2.5 sm:gap-3 border border-amber-200 z-20 max-w-[85%] sm:max-w-none">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+                    <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-amber-500 text-amber-500" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Izin Resmi Kemenag</p>
+                    <p className="text-xs sm:text-sm font-extrabold text-blue-950 leading-tight">Terakreditasi Baik</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+          </div>
         </div>
       </section>
 
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-8 space-y-8">
-
-        {/* ===== CIRI KHAS ===== */}
-        <motion.section
-          variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
-          className="section-card"
-        >
-          <div className="section-head">
-            <h2 className="font-bold text-base">Keunggulan RA Assalaamah</h2>
-            <span className="text-2xl" aria-hidden="true">⭐</span>
-          </div>
-          <div className="p-5 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-center">
-            {[
-              { icon: "📖", title: "Tilawati & Tahfidz", desc: "Hafalan Juz 30 dengan metode tilawati yang terstruktur" },
-              { icon: "🤲", title: "Ibadah Harian", desc: "Pembiasaan shalat, doa, dan adab Islami sejak dini" },
-              { icon: "🌍", title: "Bilingual", desc: "Pengenalan bahasa Arab dan bahasa Inggris sejak usia dini" },
-            ].map(({ icon, title, desc }) => (
-              <div key={title} className="rounded-xl p-4 border border-slate-100" style={{ background: "#eefbf3" }}>
-                <div className="text-3xl mb-2">{icon}</div>
-                <p className="font-bold text-sm" style={{ color: "#0f532b" }}>{title}</p>
-                <p className="text-xs text-slate-600 mt-1">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </motion.section>
-
-        {/* ===== PROFIL (Visi, Misi, Kontak) ===== */}
-        <motion.section
-          variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
-          className="section-card"
-          id="profil"
-        >
-          <div className="section-head">
-            <h2 className="font-bold text-base">Tentang RA Assalaamah</h2>
-            <span className="text-2xl" aria-hidden="true">🕌</span>
-          </div>
-          <div className="p-5 space-y-4 text-sm">
-            {/* Visi */}
-            <div className="rounded-xl p-4 text-center border" style={{ background: "#eefbf3", borderColor: "rgba(27,122,67,.2)" }}>
-              <p className="text-[11px] font-extrabold uppercase tracking-wider" style={{ color: "#0f532b" }}>Visi</p>
-              <p className="font-bold mt-1" style={{ color: "#0a3b1e" }}>
-                "Mempersiapkan Generasi yang Beriman, Berilmu, Berakhlak, dan Beramal Salihah"
-              </p>
-            </div>
-
-            {/* Misi */}
-            <details className="group">
-              <summary className="cursor-pointer font-bold text-sm py-1" style={{ color: "#0f532b" }}>
-                Misi (7 butir) <span className="text-xs font-normal text-slate-400">ketuk untuk membuka</span>
-              </summary>
-              <ol className="list-decimal pl-5 mt-2 space-y-1.5 text-slate-700">
-                <li>Membina anak sejak dini dalam mengenal Allah Swt. dan meneladani Rasulullah saw. berdasarkan Al-Qur'an dan hadis sesuai pemahaman para ulama salafussalih;</li>
-                <li>Mengenalkan dan membiasakan nilai-nilai Islami dalam kehidupan sehari-hari;</li>
-                <li>Menghargai dan menggali potensi kecerdasan majemuk setiap anak melalui kegiatan bermain yang beragam;</li>
-                <li>Menciptakan taman bermain dan belajar yang kondusif, aktif, kreatif, dan menyenangkan melalui pembelajaran yang berkesadaran, bermakna, dan menggembirakan;</li>
-                <li>Mempersiapkan kecakapan hidup (life skills) dan kemandirian anak sebagai bekal memasuki jenjang pendidikan berikutnya;</li>
-                <li>Mengintegrasikan tujuh nilai Panca Cinta dalam pembelajaran, pembiasaan, dan budaya madrasah; dan</li>
-                <li>Membangun kemitraan yang harmonis dengan orang tua, yayasan, dan masyarakat sebagai satu kesatuan catur pusat pendidikan.</li>
-              </ol>
-            </details>
-
-            {/* Alamat & kontak */}
-            <div className="grid md:grid-cols-2 gap-4 pt-1">
-              <div>
-                <p className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">Alamat</p>
-                <p className="mt-1 text-slate-700">
-                  Jl. Raya Rawa Kuning No. 29, RT.001/RW.002, Kelurahan Pulo Gebang, Kecamatan Cakung, Kota Jakarta Timur, DKI Jakarta 13950
-                </p>
-                <a
-                  href="https://share.google/HJimLV7hhcQQgotnY"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block mt-1.5 text-xs font-bold hover:underline"
-                  style={{ color: "#146c38" }}
-                >
-                  📍 Lihat lokasi di peta
-                </a>
-              </div>
-              <div>
-                <p className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">Kontak & Layanan</p>
-                <ul className="mt-1 space-y-0.5 text-slate-700">
-                  <li>
-                    WhatsApp:{" "}
-                    <WALink raw={CONFIG.INFO_WA_ALT} shown={CONFIG.INFO_WA_ALT_DISPLAY} />
-                    {" "}/{" "}
-                    <WALink raw={CONFIG.ADMIN_WA} shown={CONFIG.ADMIN_WA_DISPLAY} />
-                  </li>
-                  <li>Email: raassalamah2017@gmail.com</li>
-                  <li>
-                    Instagram:{" "}
-                    <a href="https://www.instagram.com/ra_assalaamah" target="_blank" rel="noopener noreferrer" className="font-bold hover:underline" style={{ color: "#146c38" }}>@ra_assalaamah</a>
-                    {" · "}TikTok:{" "}
-                    <a href="https://www.tiktok.com/@ra_assalaamah" target="_blank" rel="noopener noreferrer" className="font-bold hover:underline" style={{ color: "#146c38" }}>@ra_assalaamah</a>
-                  </li>
-                  <li>Belajar: pagi, Senin s.d. Jumat (Kelompok A usia 4–5 tahun, Kelompok B usia 5–6 tahun)</li>
-                </ul>
-              </div>
+      {/* 3. OVERLAPPING 4-COLUMN STATS BAR */}
+      <section className="-mt-14 relative z-20 max-w-6xl mx-auto px-4 sm:px-6 w-full">
+        <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 sm:p-8 grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          
+          {/* Stat 1: Soft Blue */}
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+              <Users className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">Ciri Khas</p>
-              <p className="mt-1 text-slate-700">Tilawati dan tahfidz Juz 30, pembiasaan ibadah harian, pengenalan bahasa Arab dan bahasa Inggris.</p>
+              <p className="text-xl sm:text-2xl font-extrabold text-blue-900">4 – 6 Th</p>
+              <p className="text-xs font-semibold text-slate-500">Kelompok A &amp; B</p>
             </div>
           </div>
-        </motion.section>
 
-        {/* ===== ALUR PENDAFTARAN ===== */}
-        <motion.section
-          variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
-          className="section-card"
-          id="alur"
-        >
-          <div className="section-head">
-            <h2 className="font-bold text-base">Alur Pendaftaran</h2>
-            <span className="text-2xl" aria-hidden="true">📋</span>
+          {/* Stat 2: Soft Green */}
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <BookOpen className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-xl sm:text-2xl font-extrabold text-emerald-800">Tilawati</p>
+              <p className="text-xs font-semibold text-slate-500">Tahfidz Juz 30</p>
+            </div>
           </div>
-          <div className="p-5">
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-center text-sm">
+
+          {/* Stat 3: Soft Yellow */}
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+              <Clock className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-xl sm:text-2xl font-extrabold text-amber-900">5 Hari</p>
+              <p className="text-xs font-semibold text-slate-500">Senin – Jumat Pagi</p>
+            </div>
+          </div>
+
+          {/* Stat 4: Soft Green */}
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <Calendar className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-xl sm:text-2xl font-extrabold text-emerald-800">2 Gelombang</p>
+              <p className="text-xs font-semibold text-slate-500">Okt 2026 – Apr 2027</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. SAMBUTAN & KEUNGGULAN (Asymmetric Bento Grid) */}
+      <section id="keunggulan" className="py-20 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          
+          {/* Left Side: 2x2 Photo Grid with Rounded-2xl corners & Decorative Yellow Dots */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="lg:col-span-6 relative"
+          >
+            {/* Decorative yellow dot pattern */}
+            <div
+              className="absolute -top-6 -left-6 w-32 h-32 opacity-30 pointer-events-none"
+              style={{
+                backgroundImage: `radial-gradient(#f59e0b 2px, transparent 2px)`,
+                backgroundSize: "16px 16px",
+              }}
+            />
+            <div
+              className="absolute -bottom-6 -right-6 w-32 h-32 opacity-30 pointer-events-none"
+              style={{
+                backgroundImage: `radial-gradient(#059669 2px, transparent 2px)`,
+                backgroundSize: "16px 16px",
+              }}
+            />
+
+            <div className="grid grid-cols-2 gap-4 relative z-10">
+              <div className="rounded-2xl overflow-hidden shadow-md border-2 border-emerald-100">
+                <SmartPhoto baseName="activity-1" alt="Belajar Mengaji Tilawati" aspect="aspect-square" />
+              </div>
+              <div className="rounded-2xl overflow-hidden shadow-md border-2 border-amber-100 mt-6">
+                <SmartPhoto baseName="activity-2" alt="Praktek Sholat & Ibadah" aspect="aspect-square" />
+              </div>
+              <div className="rounded-2xl overflow-hidden shadow-md border-2 border-blue-100 -mt-6">
+                <SmartPhoto baseName="activity-3" alt="Eksplorasi Sains & Kreasi" aspect="aspect-square" />
+              </div>
+              <div className="rounded-2xl overflow-hidden shadow-md border-2 border-emerald-100">
+                <SmartPhoto baseName="activity-4" alt="Bermain Motorik & Ketangkasan" aspect="aspect-square" />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Right Side: Content */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="lg:col-span-6 space-y-6"
+          >
+            {/* Emerald Green section label */}
+            <span className="inline-block bg-emerald-100 text-emerald-800 text-xs font-extrabold uppercase px-3.5 py-1.5 rounded-full tracking-wider">
+              Kenapa Memilih Kami
+            </span>
+
+            {/* Navy Blue Heading */}
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-blue-900 leading-tight">
+              Pondasi Iman, Karakter, dan Kemandirian Anak Sejak Usia Emas
+            </h2>
+
+            <p className="text-slate-600 text-base leading-relaxed">
+              Masa usia dini (golden age) adalah waktu terbaik menanamkan kecintaan pada Al-Qur&apos;an dan adab mulia. Di RA Assalaamah, setiap anak didampingi pendidik penuh kasih dalam lingkungan belajar yang aman, bersih, kondusif, dan menyenangkan.
+            </p>
+
+            {/* 4 Feature Points with Green Check Icons */}
+            <div className="space-y-4 pt-2">
               {[
-                { step: "1", icon: "✍️", title: "Isi Formulir", desc: "Lengkapi 39 data online dari HP" },
-                { step: "2", icon: "📲", title: "Konfirmasi WA", desc: "Kirim bukti ke WA panitia" },
-                { step: "3", icon: "📄", title: "Serahkan Berkas", desc: "Bawa dokumen ke sekolah setelah mengisi" },
-                { step: "4", icon: "🎓", title: "Bayar & Seragam", desc: "50% administrasi, ambil seragam" },
-              ].map(({ step, icon, title, desc }) => (
-                <div key={step} className="relative">
-                  <div className="w-12 h-12 mx-auto rounded-full flex items-center justify-center text-white text-xl font-extrabold shadow-md mb-2" style={{ background: "#146c38" }}>
-                    {icon}
+                {
+                  title: "Tilawati & Tahfidz Juz 30 Bertahap",
+                  desc: "Metode membaca Al-Qur'an dengan lagu tilawati yang mudah dipahami dan hafalan surat pendek berulang.",
+                },
+                {
+                  title: "Pembiasaan Ibadah Harian & Adab Islami",
+                  desc: "Latihan wudhu, sholat dhuha berjamaah, hafalan doa harian, adab makan, dan akhlak kepada orang tua.",
+                },
+                {
+                  title: "Stimulasi Kecerdasan Majemuk & Sains",
+                  desc: "Kegiatan bermain peran, sentra balok, sentra seni kreasi, motorik halus, dan eksperimen sains sederhana.",
+                },
+                {
+                  title: "Pengenalan Bahasa Arab & Bahasa Inggris",
+                  desc: "Mengenal kosakata sehari-hari melalui lagu anak dan percakapan ringan sejak dini.",
+                },
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-start gap-3.5">
+                  <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="w-4 h-4 stroke-[3]" />
                   </div>
-                  <p className="font-bold text-sm" style={{ color: "#0f532b" }}>{title}</p>
-                  <p className="text-xs text-slate-500 mt-1">{desc}</p>
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base">{item.title}</h3>
+                    <p className="text-xs sm:text-sm text-slate-600 mt-0.5">{item.desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
-        </motion.section>
 
-        {/* ===== BIAYA ===== */}
-        <motion.section
-          variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
-          className="section-card"
-          id="biaya"
-        >
-          <div className="section-head">
-            <div>
-              <h2 className="font-bold text-base">Rincian Biaya Pendaftaran</h2>
-              <p className="text-xs" style={{ color: "#d6f5e3" }}>Tahun Ajaran 2027-2028</p>
+            {/* Collapsible Visi & Misi (Dokumen KSP) */}
+            <div className="pt-4 border-t border-slate-200">
+              <details className="group bg-slate-50 rounded-xl p-4 border border-slate-200">
+                <summary className="cursor-pointer font-bold text-blue-900 text-sm flex items-center justify-between list-none">
+                  <span className="flex items-center gap-2">
+                    <span>📜 Visi &amp; 7 Misi RA Assalaamah</span>
+                    <span className="text-xs font-normal text-slate-500">(ketuk untuk membaca)</span>
+                  </span>
+                  <ChevronDown className="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" />
+                </summary>
+                <div className="mt-4 space-y-3 text-xs sm:text-sm text-slate-700 border-t border-slate-200 pt-3">
+                  <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
+                    <p className="font-bold text-emerald-900">Visi:</p>
+                    <p className="italic text-emerald-800 mt-0.5">
+                      &ldquo;Mempersiapkan Generasi yang Beriman, Berilmu, Berakhlak, dan Beramal Salihah&rdquo;
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-blue-900 mb-1">Misi (7 Butir):</p>
+                    <ol className="list-decimal pl-5 space-y-1 text-slate-600">
+                      <li>Membina anak sejak dini dalam mengenal Allah Swt. dan meneladani Rasulullah saw. berdasarkan Al-Qur&apos;an dan hadis sesuai pemahaman ulama salafussalih;</li>
+                      <li>Mengenalkan dan membiasakan nilai-nilai Islami dalam kehidupan sehari-hari;</li>
+                      <li>Menghargai dan menggali potensi kecerdasan majemuk setiap anak melalui kegiatan bermain beragam;</li>
+                      <li>Menciptakan taman bermain kondusif, aktif, kreatif, berkesadaran, dan menggembirakan;</li>
+                      <li>Mempersiapkan kecakapan hidup (life skills) dan kemandirian anak memasuki jenjang berikutnya;</li>
+                      <li>Mengintegrasikan tujuh nilai Panca Cinta dalam pembelajaran dan budaya madrasah; dan</li>
+                      <li>Membangun kemitraan harmonis dengan orang tua, yayasan, dan masyarakat.</li>
+                    </ol>
+                  </div>
+                </div>
+              </details>
             </div>
-            <span className="text-2xl" aria-hidden="true">💰</span>
+
+          </motion.div>
+
+        </div>
+      </section>
+
+      {/* 5. PROGRAM UNGGULAN (3-Column Color-Coded Cards) */}
+      <section id="program" className="bg-slate-50 py-20 lg:py-28 border-y border-slate-200/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="text-center max-w-2xl mx-auto space-y-3 mb-14">
+            <span className="inline-block bg-blue-100 text-blue-900 text-xs font-extrabold uppercase px-3.5 py-1.5 rounded-full tracking-wider">
+              Program Pendidikan
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-blue-900 tracking-tight">
+              Kurikulum Holistik Ramah Anak
+            </h2>
+            <p className="text-slate-600 text-sm sm:text-base">
+              Kombinasi kurikulum Kemenag dan kurikulum khas madrasah yang menyeimbangkan kecerdasan intelektual, emosional, spiritual, dan fisik.
+            </p>
           </div>
-          <div className="p-5 space-y-4 text-sm">
-            <BiayaTable />
-            <ol className="list-decimal pl-5 space-y-1.5 text-slate-700">
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            {/* Card 1: Tahfidz & Tilawati (Emerald Green Accent) */}
+            <div className="rounded-2xl bg-white shadow-md hover:shadow-xl transition-all p-7 border-t-4 border-emerald-500 flex flex-col justify-between border-x border-b border-slate-200/70">
+              <div className="space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl">
+                  📖
+                </div>
+                <span className="inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">
+                  Pondasi Al-Qur&apos;an
+                </span>
+                <h3 className="text-xl font-bold text-slate-900">Tahfidz &amp; Tilawati</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Bimbingan membaca Al-Qur&apos;an metode Tilawati dengan lagu khas, hafalan surat-surat pendek Juz 30, doa sehari-hari, serta hadis-hadis pilihan anak saleh.
+                </p>
+                <ul className="text-xs text-slate-600 space-y-2 pt-2 border-t border-slate-100">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Hafalan Juz 30 Bertahap</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Metode Tilawati &amp; Murottal</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Doa Harian &amp; Hadis Adab</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="mt-6 pt-4 border-t border-slate-100 text-xs font-bold text-emerald-700">
+                Kelompok A &amp; B · Tiap Hari
+              </div>
+            </div>
+
+            {/* Card 2: Sentra & Sains Anak (Royal Blue Accent) */}
+            <div className="rounded-2xl bg-white shadow-md hover:shadow-xl transition-all p-7 border-t-4 border-blue-600 flex flex-col justify-between border-x border-b border-slate-200/70">
+              <div className="space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-2xl">
+                  🧪
+                </div>
+                <span className="inline-block bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">
+                  Sentra &amp; Kreativitas
+                </span>
+                <h3 className="text-xl font-bold text-slate-900">Sentra Sains &amp; Kreasi</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Ruang eksplorasi motorik, seni melukis, sentra balok arsitek cilik, dan eksperimen sains dasar yang melatih logika, imajinasi, serta kerja sama tim.
+                </p>
+                <ul className="text-xs text-slate-600 space-y-2 pt-2 border-t border-slate-100">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+                    <span>Sentra Bermain Peran &amp; Balok</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+                    <span>Eksperimen Sains Cilik</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+                    <span>Motorik Halus &amp; Kasar</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="mt-6 pt-4 border-t border-slate-100 text-xs font-bold text-blue-700">
+                Kecerdasan Majemuk Anak
+              </div>
+            </div>
+
+            {/* Card 3: Ekstrakurikuler & Pembiasaan (Amber Yellow Accent) */}
+            <div className="rounded-2xl bg-white shadow-md hover:shadow-xl transition-all p-7 border-t-4 border-amber-500 flex flex-col justify-between border-x border-b border-slate-200/70">
+              <div className="space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl">
+                  🏕️
+                </div>
+                <span className="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">
+                  Karakter &amp; Ekskul
+                </span>
+                <h3 className="text-xl font-bold text-slate-900">Ekskul &amp; Kemandirian</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Melatih keberanian dan kemandirian melalui kegiatan ekstrakurikuler, latihan manasik haji cilik, wisata edukasi ilmiah, pentas seni, dan hari makan sehat.
+                </p>
+                <ul className="text-xs text-slate-600 space-y-2 pt-2 border-t border-slate-100">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0" />
+                    <span>Praktik Manasik Haji Cilik</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0" />
+                    <span>Wisata Ilmiah &amp; Outbound</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0" />
+                    <span>Menu Sehat &amp; Pemeriksaan UKS</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="mt-6 pt-4 border-t border-slate-100 text-xs font-bold text-amber-700">
+                Pengalaman Belajar Nyata
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* 6. RINCIAN BIAYA & JADWAL GELOMBANG */}
+      <section id="biaya" className="py-20 lg:py-28 max-w-5xl mx-auto px-4 sm:px-6 w-full">
+        <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
+          <span className="inline-block bg-emerald-100 text-emerald-800 text-xs font-extrabold uppercase px-3.5 py-1.5 rounded-full tracking-wider">
+            Investasi Pendidikan
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-blue-900 tracking-tight">
+            Rincian Biaya &amp; Jadwal Pendaftaran
+          </h2>
+          <p className="text-slate-600 text-sm sm:text-base">
+            Biaya transparan Tahun Ajaran 2027/2028. Rincian mencakup pendaftaran, perlengkapan, seragam, buku paket, dan kegiatan setahun.
+          </p>
+        </div>
+
+        {/* Jadwal 2 Gelombang */}
+        <div className="grid sm:grid-cols-2 gap-4 mb-8">
+          <div className="rounded-2xl p-6 border-2 border-emerald-500/40 bg-emerald-50/60 shadow-xs flex items-start gap-4">
+            <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xl shrink-0">
+              1️⃣
+            </div>
+            <div>
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-800">
+                Pendaftaran Gelombang 1
+              </span>
+              <p className="text-lg font-extrabold text-emerald-950 mt-0.5">
+                Oktober 2026 – Januari 2027
+              </p>
+              <p className="text-xs text-emerald-700 mt-1">
+                Disarankan mendaftar lebih awal karena kuota kelas terbatas.
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-2xl p-6 border-2 border-amber-500/40 bg-amber-50/60 shadow-xs flex items-start gap-4">
+            <div className="w-12 h-12 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center text-xl shrink-0">
+              2️⃣
+            </div>
+            <div>
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-800">
+                Pendaftaran Gelombang 2
+              </span>
+              <p className="text-lg font-extrabold text-amber-950 mt-0.5">
+                Februari – April 2027
+              </p>
+              <p className="text-xs text-amber-700 mt-1">
+                Akan ditutup sewaktu-waktu jika kapasitas rombel telah terpenuhi.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Biaya Card */}
+        <div className="section-card p-6 sm:p-8 space-y-6">
+          <BiayaTable />
+
+          <div className="bg-slate-50 rounded-xl p-5 border border-slate-200 text-xs sm:text-sm text-slate-700 space-y-2.5">
+            <p className="font-bold text-blue-900 text-sm">Ketentuan Pendaftaran:</p>
+            <ol className="list-decimal pl-5 space-y-1.5 leading-relaxed">
               <li>Biaya pendaftaran <strong>Rp200.000</strong>.</li>
               <li>
                 Pengembalian formulir pendaftaran disertai:
-                <ul className="list-[lower-alpha] pl-5 mt-1 space-y-0.5">
+                <ul className="list-[lower-alpha] pl-5 mt-1 space-y-0.5 text-xs text-slate-600">
                   <li>Fotokopi Akta Kelahiran</li>
                   <li>Fotokopi Kartu Keluarga</li>
                   <li>Pas foto ukuran 3x4 sebanyak 3 lembar</li>
                   <li>Fotokopi KTP Orang Tua</li>
                 </ul>
-                Akta Kelahiran dan Kartu Keluarga yang sudah diupload di formulir ini tidak perlu difotokopi lagi.
-                Pengembalian formulir paling lambat seminggu setelah pengambilan.
+                <span className="text-xs italic text-slate-500 mt-1 block">
+                  * Akta Kelahiran dan Kartu Keluarga yang sudah diupload di formulir ini tidak perlu difotokopi lagi. Pengembalian formulir paling lambat seminggu setelah pengambilan/pengisian.
+                </span>
               </li>
-              <li>Pendaftaran gelombang 1: Oktober 2026 – Januari 2027.</li>
-              <li>Pendaftaran gelombang 2: Februari – April 2027.</li>
+              <li>Pendaftaran gelombang 1: Oktober 2026 – Januari 2027; gelombang 2: Februari – April 2027.</li>
               <li>Setelah mengembalikan persyaratan pendaftaran, membayar administrasi sebanyak 50% dan mengambil seragam.</li>
               <li>Tes psikotes dasar akan dilaksanakan setelah masuk sekolah.</li>
               <li>
@@ -282,104 +600,357 @@ export default function HomePage() {
                 ).
               </li>
             </ol>
-            <p className="text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+            <p className="text-xs text-slate-500 pt-2 border-t border-slate-200">
               <strong>NB:</strong> Biaya tersebut di luar kegiatan kedinasan (Manasik, Aksera, dan Akhirussanah).
             </p>
           </div>
-        </motion.section>
+        </div>
+      </section>
 
-        {/* ===== JADWAL GELOMBANG ===== */}
-        <motion.section
-          variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
-          className="section-card"
-          id="jadwal"
-        >
-          <div className="section-head">
-            <h2 className="font-bold text-base">Jadwal Penerimaan</h2>
-            <span className="text-2xl" aria-hidden="true">📅</span>
+      {/* 7. FASILITAS & GALERI KEGIATAN (Masonry/Bento Grid) */}
+      <section id="galeri" className="bg-slate-50 py-20 lg:py-28 border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="text-center max-w-2xl mx-auto space-y-3 mb-14">
+            <span className="inline-block bg-amber-100 text-amber-900 text-xs font-extrabold uppercase px-3.5 py-1.5 rounded-full tracking-wider">
+              Suasana &amp; Sarana
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-blue-900 tracking-tight">
+              Galeri Kegiatan &amp; Fasilitas Belajar
+            </h2>
+            <p className="text-slate-600 text-sm sm:text-base">
+              Lingkungan madrasah yang bersih, asri, nyaman, dan mendukung kegiatan eksplorasi motorik serta spiritual anak setiap hari.
+            </p>
           </div>
-          <div className="p-5 grid sm:grid-cols-2 gap-4 text-sm">
-            {[
-              { title: "Gelombang 1", periode: "Oktober 2026 – Januari 2027", color: "#0f532b", bg: "#eefbf3" },
-              { title: "Gelombang 2", periode: "Februari – April 2027", color: "#92400e", bg: "#fffbeb" },
-            ].map(({ title, periode, color, bg }) => (
-              <div key={title} className="rounded-xl p-5 border" style={{ background: bg, borderColor: color + "33" }}>
-                <p className="text-[11px] font-extrabold uppercase tracking-wider" style={{ color }}>
-                  {title}
-                </p>
-                <p className="font-bold text-base mt-1" style={{ color }}>{periode}</p>
-                <p className="text-xs text-slate-500 mt-1">Daftarkan segera — kuota terbatas</p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            {/* Photo 1 */}
+            <div className="group relative rounded-2xl overflow-hidden shadow-md bg-white border border-slate-200 aspect-4/3 cursor-pointer">
+              <SmartPhoto baseName="gallery-1" alt="Ruang Kelas Nyaman Ber-AC" aspect="w-full h-full" />
+              <div className="absolute inset-0 bg-gradient-to-t from-blue-950/85 via-emerald-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
+                <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider">Fasilitas</span>
+                <p className="text-base font-bold">Ruang Kelas Nyaman &amp; Ber-AC</p>
+                <p className="text-xs text-slate-200 mt-0.5">Suasana belajar kondusif dan bersih</p>
               </div>
-            ))}
-          </div>
-        </motion.section>
-
-        {/* ===== FAQ ===== */}
-        <motion.section
-          variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
-          className="section-card"
-          id="faq"
-        >
-          <div className="section-head">
-            <h2 className="font-bold text-base">Pertanyaan Umum (FAQ)</h2>
-            <span className="text-2xl" aria-hidden="true">❓</span>
-          </div>
-          <div className="p-5 divide-y divide-slate-100 text-sm">
-            {[
-              { q: "Berapa usia minimal masuk RA?", a: "Kelompok A untuk usia 4–5 tahun, Kelompok B untuk usia 5–6 tahun." },
-              { q: "Apakah bisa mendaftar dari luar Jakarta?", a: "Bisa. Isi formulir online ini dari mana saja, lalu hubungi panitia untuk konfirmasi." },
-              { q: "Dokumen apa saja yang perlu disiapkan?", a: "Akta Kelahiran, Kartu Keluarga, pas foto 3×4 (3 lembar), dan KTP orang tua." },
-              { q: "Apakah ada tes masuk?", a: "Tes psikotes dasar ringan akan dilaksanakan setelah anak masuk sekolah, bukan sebagai syarat penerimaan." },
-              { q: "Bagaimana cara membayar?", a: "Setelah mengembalikan berkas persyaratan, bayar 50% administrasi dan ambil seragam di kantor sekolah." },
-            ].map(({ q, a }) => (
-              <details key={q} className="group py-3">
-                <summary className="cursor-pointer font-semibold text-slate-800 list-none flex justify-between items-center">
-                  {q}
-                  <span className="text-slate-400 ml-2 group-open:rotate-180 transition-transform">▼</span>
-                </summary>
-                <p className="mt-2 text-slate-600 text-xs">{a}</p>
-              </details>
-            ))}
-          </div>
-        </motion.section>
-
-        {/* ===== FORMULIR ===== */}
-        <section id="formulir">
-          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
-            <div className="mb-5 text-center">
-              <h2 className="text-xl font-extrabold" style={{ color: "#0a3b1e" }}>Formulir Pendaftaran Online</h2>
-              <p className="text-sm text-slate-600 mt-1">Isi dengan data sesuai Kartu Keluarga dan Akta Kelahiran</p>
             </div>
-            <PpdbForm />
-          </motion.div>
-        </section>
 
-      </main>
+            {/* Photo 2 */}
+            <div className="group relative rounded-2xl overflow-hidden shadow-md bg-white border border-slate-200 aspect-4/3 cursor-pointer">
+              <SmartPhoto baseName="gallery-2" alt="Area Bermain Outdoor Aman" aspect="w-full h-full" />
+              <div className="absolute inset-0 bg-gradient-to-t from-blue-950/85 via-emerald-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
+                <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider">Outdoor</span>
+                <p className="text-base font-bold">Area Bermain &amp; Ketangkasan</p>
+                <p className="text-xs text-slate-200 mt-0.5">Taman ramah anak berpagar aman</p>
+              </div>
+            </div>
 
-      {/* ===== FOOTER ===== */}
-      <footer className="bg-white border-t border-slate-200 py-4 mt-10 text-center text-xs text-slate-500 no-print">
-        <p>
-          © 2027 <strong>Raudhatul Athfal (RA) Assalaamah</strong> · PPDB Tahun Ajaran 2027/2028 ·
-          WhatsApp Panitia: <strong>{CONFIG.ADMIN_WA_DISPLAY}</strong>
-        </p>
-        <p className="mt-1">
-          <Link href="/admin" className="hover:underline" style={{ color: "#146c38" }}>
-            Halaman Admin ↗
-          </Link>
-        </p>
+            {/* Photo 3 */}
+            <div className="group relative rounded-2xl overflow-hidden shadow-md bg-white border border-slate-200 aspect-4/3 cursor-pointer">
+              <SmartPhoto baseName="gallery-3" alt="Pojok Baca & Perpustakaan" aspect="w-full h-full" />
+              <div className="absolute inset-0 bg-gradient-to-t from-blue-950/85 via-emerald-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
+                <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider">Literasi</span>
+                <p className="text-base font-bold">Pojok Baca &amp; Cerita Islami</p>
+                <p className="text-xs text-slate-200 mt-0.5">Buku bergambar adab &amp; kisah nabi</p>
+              </div>
+            </div>
+
+            {/* Photo 4 */}
+            <div className="group relative rounded-2xl overflow-hidden shadow-md bg-white border border-slate-200 aspect-4/3 cursor-pointer">
+              <SmartPhoto baseName="gallery-4" alt="Praktik Ibadah & Manasik" aspect="w-full h-full" />
+              <div className="absolute inset-0 bg-gradient-to-t from-blue-950/85 via-emerald-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
+                <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider">Kegiatan</span>
+                <p className="text-base font-bold">Praktik Ibadah &amp; Manasik</p>
+                <p className="text-xs text-slate-200 mt-0.5">Mengenal rukun Islam sejak dini</p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* 8. ALUR PENDAFTARAN PPDB (Horizontal Stepper) */}
+      <section id="alur" className="py-20 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-2xl mx-auto space-y-3 mb-16">
+          <span className="inline-block bg-blue-100 text-blue-900 text-xs font-extrabold uppercase px-3.5 py-1.5 rounded-full tracking-wider">
+            Tata Cara Pendaftaran
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-blue-900 tracking-tight">
+            4 Langkah Mudah Mendaftar di HP
+          </h2>
+          <p className="text-slate-600 text-sm sm:text-base">
+            Proses cepat, praktis, dan dapat diisi santai dari rumah bersama keluarga.
+          </p>
+        </div>
+
+        {/* 4 Connected Steps using Alternating Blue, Green, Yellow */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+          
+          {/* Step 1: Royal Blue */}
+          <div className="relative text-center flex flex-col items-center">
+            <div className="w-16 h-16 rounded-full bg-blue-900 text-white flex items-center justify-center text-xl font-extrabold shadow-lg mb-4 ring-4 ring-blue-100">
+              1
+            </div>
+            <h3 className="text-base font-bold text-slate-900 mb-1">Isi Formulir Online</h3>
+            <p className="text-xs text-slate-600 leading-relaxed max-w-xs">
+              Lengkapi 39 data calon murid sesuai Kartu Keluarga (KK) dan Akta Kelahiran pada formulir di bawah.
+            </p>
+          </div>
+
+          {/* Step 2: Emerald Green */}
+          <div className="relative text-center flex flex-col items-center">
+            <div className="w-16 h-16 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xl font-extrabold shadow-lg mb-4 ring-4 ring-emerald-100">
+              2
+            </div>
+            <h3 className="text-base font-bold text-slate-900 mb-1">Konfirmasi WhatsApp</h3>
+            <p className="text-xs text-slate-600 leading-relaxed max-w-xs">
+              Setelah kirim, sistem otomatis menerbitkan Nomor Registrasi dan tombol kirim bukti ke WhatsApp panitia.
+            </p>
+          </div>
+
+          {/* Step 3: Amber Yellow */}
+          <div className="relative text-center flex flex-col items-center">
+            <div className="w-16 h-16 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-xl font-extrabold shadow-lg mb-4 ring-4 ring-amber-100">
+              3
+            </div>
+            <h3 className="text-base font-bold text-slate-900 mb-1">Serahkan Berkas</h3>
+            <p className="text-xs text-slate-600 leading-relaxed max-w-xs">
+              Serahkan fotokopi KK, Akta, KTP ortu, dan 3 lembar pas foto 3x4 ke kantor RA Assalaamah.
+            </p>
+          </div>
+
+          {/* Step 4: Emerald Green / Blue */}
+          <div className="relative text-center flex flex-col items-center">
+            <div className="w-16 h-16 rounded-full bg-blue-900 text-white flex items-center justify-center text-xl font-extrabold shadow-lg mb-4 ring-4 ring-blue-100">
+              4
+            </div>
+            <h3 className="text-base font-bold text-slate-900 mb-1">Bayar 50% &amp; Seragam</h3>
+            <p className="text-xs text-slate-600 leading-relaxed max-w-xs">
+              Membayar administrasi minimal 50%, ambil seragam anak, dan siap menyambut tahun ajaran baru!
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 9. FORMULIR PENDAFTARAN (PPDB ONLINE) */}
+      <section id="formulir" className="py-16 lg:py-24 bg-gradient-to-b from-slate-50 to-white border-t border-slate-200">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          
+          <div className="text-center space-y-3 mb-10">
+            <span className="inline-block bg-amber-100 text-amber-900 text-xs font-extrabold uppercase px-3.5 py-1.5 rounded-full tracking-wider">
+              Formulir Pendaftaran Siswa Baru
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-blue-900 tracking-tight">
+              Pendaftaran Online TA 2027/2028
+            </h2>
+            <p className="text-slate-600 text-sm max-w-xl mx-auto">
+              Silakan isi 39 kolom data berikut dengan teliti. Data otomatis tersimpan di perangkat ini (aman bila keluar sejenak).
+            </p>
+          </div>
+
+          {/* Component Formulir PPDB 39 Field */}
+          <PpdbForm />
+
+        </div>
+      </section>
+
+      {/* 10. TANYA JAWAB (FAQ) */}
+      <section id="faq" className="py-20 lg:py-24 max-w-4xl mx-auto px-4 sm:px-6 w-full">
+        <div className="text-center space-y-3 mb-12">
+          <span className="inline-block bg-blue-100 text-blue-900 text-xs font-extrabold uppercase px-3.5 py-1.5 rounded-full tracking-wider">
+            Bantuan Wali Murid
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-blue-900 tracking-tight">
+            Pertanyaan yang Sering Diajukan
+          </h2>
+          <p className="text-slate-600 text-sm">
+            Jawaban lengkap seputar pendaftaran, berkas, dan ketentuan RA Assalaamah.
+          </p>
+        </div>
+
+        <div className="divide-y divide-slate-200 border-y border-slate-200">
+          {faqs.map((faq, idx) => (
+            <div key={idx} className="py-4">
+              <button
+                type="button"
+                onClick={() => toggleFaq(idx)}
+                className="w-full text-left font-bold text-slate-900 text-base flex justify-between items-center py-2 hover:text-emerald-700 transition"
+                aria-expanded={openFaq === idx}
+              >
+                <span>{faq.q}</span>
+                <ChevronDown
+                  className={`w-5 h-5 text-slate-400 transition-transform ${
+                    openFaq === idx ? "rotate-180 text-emerald-600" : ""
+                  }`}
+                />
+              </button>
+              {openFaq === idx && (
+                <p className="text-sm text-slate-600 mt-2 leading-relaxed animate-in fade-in duration-200 pr-6">
+                  {faq.a}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 11. PRE-FOOTER CTA BANNER */}
+      <section className="py-12 max-w-6xl mx-auto px-4 sm:px-6 w-full">
+        <div className="bg-gradient-to-r from-emerald-600 via-blue-800 to-blue-900 text-white rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden text-center lg:text-left flex flex-col lg:flex-row items-center justify-between gap-8">
+          
+          <div className="space-y-3 max-w-xl">
+            <span className="inline-block bg-amber-400 text-slate-950 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+              Konsultasi &amp; Tanya Jawab
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold leading-tight">
+              Masih Ada Pertanyaan Seputar PPDB?
+            </h2>
+            <p className="text-blue-100 text-sm sm:text-base leading-relaxed">
+              Tim panitia siap membantu Ayah &amp; Bunda melalui WhatsApp resmi panitia PPDB. Konsultasikan usia anak, program kelas, dan tata cara pendaftaran.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto shrink-0 justify-center">
+            <a
+              href={`https://wa.me/${formatWAForLink(CONFIG.ADMIN_WA)}?text=Assalamu%27alaikum%20Panitia%20PPDB%20RA%20Assalaamah%2C%20saya%20ingin%20bertanya%20mengenai%20pendaftaran`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-sm sm:text-base px-7 py-3.5 rounded-full shadow-lg transition active:scale-95"
+            >
+              <MessageCircle className="w-5 h-5" />
+              <span>Chat WhatsApp Panitia</span>
+            </a>
+            <a
+              href="#formulir"
+              className="inline-flex items-center justify-center gap-2 bg-white/15 hover:bg-white/25 text-white border border-white/40 font-bold text-sm sm:text-base px-6 py-3.5 rounded-full transition"
+            >
+              <span>Langsung Daftar →</span>
+            </a>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 12. FOOTER (Clean bg-blue-950) */}
+      <footer className="bg-blue-950 text-slate-300 pt-16 pb-12 border-t border-blue-900/50 mt-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-blue-900/60">
+            
+            {/* Col 1: School Identity */}
+            <div className="lg:col-span-5 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-white p-1 shadow-md flex items-center justify-center shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/logo-ra.jpg" alt="Logo RA Assalaamah" className="w-full h-full object-contain" />
+                </div>
+                <div>
+                  <h3 className="text-base font-extrabold text-white">RAUDHATUL ATHFAL ASSALAAMAH</h3>
+                  <p className="text-xs text-emerald-400 font-semibold">Taman Belajar Islami &amp; Berkarakter</p>
+                </div>
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed max-w-md">
+                Lembaga pendidikan anak usia dini berciri khas Islam yang menyelenggarakan bimbingan Tilawati Al-Qur&apos;an, hafalan Juz 30, serta pembiasaan ibadah dan adab sejak dini.
+              </p>
+              <div className="pt-1 flex items-center gap-3 text-xs text-slate-400">
+                <span>Instagram: <a href="https://www.instagram.com/ra_assalaamah" target="_blank" rel="noopener noreferrer" className="text-emerald-400 font-bold hover:underline">@ra_assalaamah</a></span>
+                <span>·</span>
+                <span>TikTok: <a href="https://www.tiktok.com/@ra_assalaamah" target="_blank" rel="noopener noreferrer" className="text-emerald-400 font-bold hover:underline">@ra_assalaamah</a></span>
+              </div>
+            </div>
+
+            {/* Col 2: Alamat */}
+            <div className="lg:col-span-4 space-y-3">
+              <p className="text-sm font-bold text-white uppercase tracking-wider">Lokasi Madrasah</p>
+              <div className="flex items-start gap-2.5 text-xs text-slate-300 leading-relaxed">
+                <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <span>
+                  Jl. Raya Rawa Kuning No. 29, RT.001/RW.002, Kelurahan Pulo Gebang, Kecamatan Cakung, Kota Jakarta Timur, DKI Jakarta 13950
+                </span>
+              </div>
+              <a
+                href="https://share.google/HJimLV7hhcQQgotnY"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block text-xs font-bold text-emerald-400 hover:text-emerald-300 hover:underline pt-1"
+              >
+                📍 Buka Peta Google Maps →
+              </a>
+            </div>
+
+            {/* Col 3: Layanan & Jam */}
+            <div className="lg:col-span-3 space-y-3">
+              <p className="text-sm font-bold text-white uppercase tracking-wider">Kontak &amp; Layanan</p>
+              <ul className="text-xs text-slate-300 space-y-2">
+                <li className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>WhatsApp 1: <strong>{CONFIG.ADMIN_WA_DISPLAY}</strong></span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>WhatsApp 2: <strong>{CONFIG.INFO_WA_ALT_DISPLAY}</strong></span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>raassalamah2017@gmail.com</span>
+                </li>
+                <li className="pt-1 text-[11px] text-slate-400">
+                  Senin s.d. Jumat (pagi hari aktif)
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+            <p>© 2027 <strong>RA Assalaamah</strong> · Panitia PPDB Tahun Ajaran 2027/2028. Hak Cipta Dilindungi.</p>
+            <div className="flex items-center gap-4">
+              <Link href="/admin" className="text-slate-400 hover:text-white transition">
+                Portal Admin Panitia ↗
+              </Link>
+            </div>
+          </div>
+        </div>
       </footer>
 
-      {/* ===== Tombol Daftar mengambang di HP ===== */}
-      <div className="fixed bottom-5 right-4 z-30 no-print sm:hidden">
+      {/* 13. FLOATING WHATSAPP & QUICK ACTION BUTTONS */}
+      {/* Floating Emerald WhatsApp Button */}
+      <div className="fixed bottom-6 right-6 z-40 hidden sm:block">
         <a
-          href="#formulir"
-          className="flex items-center gap-2 font-extrabold text-sm px-5 py-3.5 rounded-full shadow-xl"
-          style={{ background: "#146c38", color: "#fff" }}
-          aria-label="Daftar Sekarang"
+          href={`https://wa.me/${formatWAForLink(CONFIG.ADMIN_WA)}?text=Assalamu%27alaikum%20Panitia%20PPDB%20RA%20Assalaamah%2C%20saya%20ingin%20konsultasi%20pendaftaran`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-2.5 bg-emerald-600 hover:bg-emerald-500 text-white p-3.5 rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95"
+          aria-label="Hubungi WhatsApp Panitia"
         >
-          ✍️ Daftar
+          <MessageCircle className="w-6 h-6" />
+          <span className="max-w-0 overflow-hidden whitespace-nowrap font-bold text-xs group-hover:max-w-xs transition-all duration-300">
+            Konsultasi WhatsApp
+          </span>
         </a>
       </div>
-    </>
+
+      {/* Floating Mobile Bottom Action */}
+      <div className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 sm:hidden flex items-center gap-2.5 shadow-2xl">
+        <a
+          href={`https://wa.me/${formatWAForLink(CONFIG.ADMIN_WA)}?text=Assalamu%27alaikum%20Panitia%20PPDB%20RA%20Assalaamah`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-1/3 flex items-center justify-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold text-xs py-3 rounded-xl"
+        >
+          <MessageCircle className="w-4 h-4 text-emerald-600" />
+          <span>Tanya WA</span>
+        </a>
+        <a
+          href="#formulir"
+          className="w-2/3 flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm py-3 rounded-xl shadow-md"
+        >
+          <Sparkles className="w-4 h-4 text-slate-950" />
+          <span>Daftar Sekarang</span>
+        </a>
+      </div>
+    </div>
   );
 }
