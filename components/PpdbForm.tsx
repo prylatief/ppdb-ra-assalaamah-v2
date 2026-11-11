@@ -163,11 +163,11 @@ function FieldControl({ f, cols, onCopyAddress, onDigitInput, digitCounts, formR
 
   if (f.type === "digits") {
     labelEl = (
-      <div className="flex justify-between">
-        <label className="field-label" htmlFor={id}>
+      <div className="flex flex-wrap items-center justify-between gap-1 mb-1">
+        <label className="field-label !mb-0" htmlFor={id}>
           {labelText} <span className="req">*</span>
         </label>
-        <span className={`digit-badge ${count === 16 ? "!text-emerald-600" : "!text-amber-600"}`}>
+        <span className={`digit-badge px-2 py-0.5 rounded-md text-[10px] sm:text-xs font-bold ${count === 16 ? "!text-emerald-600 bg-emerald-50" : "!text-amber-600 bg-amber-50"}`}>
           {count}/16 digit
         </span>
       </div>
@@ -176,15 +176,14 @@ function FieldControl({ f, cols, onCopyAddress, onDigitInput, digitCounts, formR
 
   if (f.copyFromChild) {
     labelEl = (
-      <div className="flex items-center justify-between mb-1">
+      <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1.5">
         <label className="field-label !mb-0" htmlFor={id}>
           {labelText} <span className="req">*</span>
         </label>
         <button
           type="button"
           onClick={() => onCopyAddress(f.key)}
-          className="text-[11px] font-bold hover:underline py-1"
-          style={{ color: "#146c38" }}
+          className="text-[11px] font-bold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-0.5 rounded-lg border border-emerald-200/80 transition-colors"
         >
           📌 Sama dengan alamat anak
         </button>
@@ -448,7 +447,7 @@ export default function PpdbForm() {
 
       {/* Wizard nav */}
       {!showAll && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-5" role="tablist">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-2.5 mb-5" role="tablist">
           {FORM_STEPS.map((st, i) => {
             const n = i + 1;
             const isActive = currentStep === n;
@@ -459,16 +458,16 @@ export default function PpdbForm() {
                 role="tab"
                 aria-selected={isActive}
                 onClick={() => goToStep(n)}
-                className={`step-tab relative overflow-hidden transition-all ${
+                className={`step-tab !p-2 sm:!p-3 relative overflow-hidden transition-all ${
                   isActive ? "step-active ring-2 ring-amber-400" : "hover:bg-slate-50"
                 }`}
               >
-                <span className="step-num relative z-10">{n}</span>
-                <div className="overflow-hidden relative z-10">
-                  <div className={`text-[11px] ${isActive ? "text-amber-300" : "opacity-80"}`}>
-                    Bagian {n} ({st.range})
+                <span className="step-num w-6 h-6 sm:w-7 sm:h-7 text-xs shrink-0 relative z-10">{n}</span>
+                <div className="overflow-hidden min-w-0 relative z-10">
+                  <div className={`text-[10px] sm:text-[11px] leading-tight ${isActive ? "text-amber-300" : "opacity-80"}`}>
+                    Bagian {n}
                   </div>
-                  <div className="text-xs font-bold truncate">{st.tab}</div>
+                  <div className="text-[11px] sm:text-xs font-bold leading-snug break-words">{st.tab}</div>
                 </div>
               </button>
             );
@@ -508,15 +507,15 @@ export default function PpdbForm() {
                 data-step={n}
                 className={`section-card${visible ? "" : " hidden"}`}
               >
-                <div className="section-head">
-                  <div>
-                    <h3 className="font-bold text-base">{st.title}</h3>
-                    <p className="text-xs" style={{ color: "#d6f5e3" }}>{st.sub}</p>
+                <div className="section-head p-3.5 sm:p-4">
+                  <div className="min-w-0 pr-2">
+                    <h3 className="font-bold text-sm sm:text-base leading-tight">{st.title}</h3>
+                    <p className="text-[11px] sm:text-xs mt-0.5 text-blue-100">{st.sub}</p>
                   </div>
-                  <span className="text-2xl" aria-hidden="true">{st.icon}</span>
+                  <span className="text-xl sm:text-2xl shrink-0" aria-hidden="true">{st.icon}</span>
                 </div>
 
-                <div className={`p-5 grid grid-cols-1 ${st.cols === 3 ? "md:grid-cols-3" : "md:grid-cols-2"} gap-4`}>
+                <div className={`p-4 sm:p-5 grid grid-cols-1 ${st.cols === 3 ? "md:grid-cols-3" : "md:grid-cols-2"} gap-4`}>
                   {st.fields.map((f) => (
                     <FieldControl
                       key={f.key}
@@ -532,16 +531,16 @@ export default function PpdbForm() {
 
                 <div className="section-foot justify-between">
                   {!first && !showAll ? (
-                    <button type="button" onClick={() => goToStep(n - 1)} className="btn-secondary step-nav">
+                    <button type="button" onClick={() => goToStep(n - 1)} className="btn-secondary step-nav text-xs sm:text-sm">
                       ← Kembali
                     </button>
                   ) : <span />}
                   {last ? (
-                    <button type="submit" id="btnSubmit" disabled={submitting} className="btn-primary ml-auto">
+                    <button type="submit" id="btnSubmit" disabled={submitting} className="btn-primary ml-auto text-xs sm:text-sm">
                       {submitting ? "⏳ Mengirim..." : "✅ Simpan & Kirim Pendaftaran"}
                     </button>
                   ) : !showAll ? (
-                    <button type="button" onClick={() => goToStep(n + 1)} className="btn-primary step-nav ml-auto">
+                    <button type="button" onClick={() => goToStep(n + 1)} className="btn-primary step-nav ml-auto text-xs sm:text-sm">
                       Lanjut: {FORM_STEPS[n].tab} →
                     </button>
                   ) : null}

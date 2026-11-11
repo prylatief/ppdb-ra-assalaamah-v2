@@ -69,12 +69,12 @@ export default function BiayaTable() {
           className="overflow-x-auto rounded-2xl border border-slate-200/90 shadow-xs bg-white"
           id={`biayaTable${kelas}`}
         >
-          <table className="w-full text-sm">
+          <table className="w-full text-xs sm:text-sm">
             <thead>
-              <tr className="bg-slate-50/90 border-b border-slate-200 text-slate-700 text-xs uppercase tracking-wider font-extrabold">
-                <th className="py-3.5 px-4 text-left w-12">No</th>
-                <th className="py-3.5 px-4 text-left">Uraian Komponen</th>
-                <th className="py-3.5 px-4 text-right">Biaya</th>
+              <tr className="bg-slate-50/90 border-b border-slate-200 text-slate-700 text-[11px] sm:text-xs uppercase tracking-wider font-extrabold">
+                <th className="py-3 px-2 sm:px-4 text-center sm:text-left w-8 sm:w-12">No</th>
+                <th className="py-3 px-2 sm:px-4 text-left">Uraian Komponen</th>
+                <th className="py-3 px-2 sm:px-4 text-right">Biaya</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -83,22 +83,22 @@ export default function BiayaTable() {
                 if (v !== "kegiatan") {
                   return (
                     <tr key={label} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="py-3 px-4 text-slate-400 font-semibold align-top">{no}</td>
-                      <td className="py-3 px-4 font-medium text-slate-800">{label}</td>
-                      <td className="py-3 px-4 text-right whitespace-nowrap font-bold text-slate-900">{rp(v)}</td>
+                      <td className="py-2.5 sm:py-3 px-2 sm:px-4 text-slate-400 font-semibold align-top text-center sm:text-left">{no}</td>
+                      <td className="py-2.5 sm:py-3 px-2 sm:px-4 font-medium text-slate-800">{label}</td>
+                      <td className="py-2.5 sm:py-3 px-2 sm:px-4 text-right whitespace-nowrap font-bold text-slate-900">{rp(v)}</td>
                     </tr>
                   );
                 }
                 const kegTotal = b.kegiatan.reduce((s, [, x]) => s + x, 0);
                 return (
                   <tr key={label} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="py-3 px-4 text-slate-400 font-semibold align-top">{no}</td>
-                    <td className="py-3 px-4">
+                    <td className="py-2.5 sm:py-3 px-2 sm:px-4 text-slate-400 font-semibold align-top text-center sm:text-left">{no}</td>
+                    <td className="py-2.5 sm:py-3 px-2 sm:px-4">
                       <div className="font-bold text-blue-900">{label}</div>
-                      <ul className="mt-2.5 ml-1 pl-3.5 border-l-2 border-emerald-400 text-xs text-slate-600 space-y-1.5">
+                      <ul className="mt-2 ml-0.5 sm:ml-1 pl-2 sm:pl-3.5 border-l-2 border-emerald-400 text-[11px] sm:text-xs text-slate-600 space-y-1">
                         {b.kegiatan.map(([l, x], i) => (
-                          <li key={l} className="flex justify-between gap-4 py-0.5">
-                            <span className="flex items-center gap-1.5">
+                          <li key={l} className="flex justify-between gap-2 sm:gap-4 py-0.5">
+                            <span className="flex items-center gap-1">
                               <span className="text-emerald-600 font-bold">{String.fromCharCode(97 + i)}.</span>
                               <span>{l}</span>
                             </span>
@@ -107,7 +107,7 @@ export default function BiayaTable() {
                         ))}
                       </ul>
                     </td>
-                    <td className="py-3 px-4 text-right whitespace-nowrap font-bold text-blue-900 align-top">
+                    <td className="py-2.5 sm:py-3 px-2 sm:px-4 text-right whitespace-nowrap font-bold text-blue-900 align-top">
                       {rp(kegTotal)}
                     </td>
                   </tr>
@@ -116,15 +116,15 @@ export default function BiayaTable() {
             </tbody>
             <tfoot>
               <tr className="bg-emerald-50/80 text-emerald-950 font-extrabold border-t-2 border-emerald-500">
-                <td colSpan={2} className="py-4 px-4 text-sm sm:text-base">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                <td colSpan={2} className="py-3.5 px-2 sm:px-4 text-xs sm:text-base">
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 shrink-0" />
                     <span>TOTAL BIAYA (Kelas {kelas})</span>
                   </div>
                 </td>
                 <td
                   id={`biayaTotal${kelas}`}
-                  className="py-4 px-4 text-right whitespace-nowrap text-base sm:text-lg text-emerald-800 font-black"
+                  className="py-3.5 px-2 sm:px-4 text-right whitespace-nowrap text-sm sm:text-lg text-emerald-800 font-black"
                   data-total={biayaTotal(kelas)}
                 >
                   {rp(biayaTotal(kelas))}

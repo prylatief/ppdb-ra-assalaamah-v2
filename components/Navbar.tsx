@@ -21,18 +21,18 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-18 sm:h-20">
           {/* Logo & School Name */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 rounded-full bg-white p-1 shadow-md border border-emerald-100 flex items-center justify-center shrink-0 ring-2 ring-emerald-500/30 group-hover:ring-amber-400 transition">
-              <LogoImg size={42} className="w-full h-full object-contain" priority />
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 group min-w-0 pr-1 sm:pr-2">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white p-1 shadow-md border border-emerald-100 flex items-center justify-center shrink-0 ring-2 ring-emerald-500/30 group-hover:ring-amber-400 transition">
+              <LogoImg size={40} className="w-full h-full object-contain" priority />
             </div>
-            <div className="flex flex-col">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-700">
+            <div className="flex flex-col min-w-0">
+              <span className="block truncate text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-emerald-700">
                 Raudhatul Athfal
               </span>
-              <span className="text-base sm:text-lg font-extrabold text-blue-900 tracking-tight leading-none group-hover:text-emerald-600 transition">
+              <span className="block truncate text-sm sm:text-lg font-extrabold text-blue-900 tracking-tight leading-none group-hover:text-emerald-600 transition">
                 ASSALAAMAH
               </span>
-              <span className="text-[11px] text-slate-500 font-medium">
+              <span className="hidden min-[360px]:block truncate text-[10px] sm:text-[11px] text-slate-500 font-medium">
                 Jakarta Timur · TA 2027/2028
               </span>
             </div>

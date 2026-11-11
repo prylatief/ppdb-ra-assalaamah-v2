@@ -29,35 +29,68 @@ export function ArcStepper({
 
   return (
     <div className={`w-full ${className}`}>
-      {/* Mobile Stepper Pill View (< 640px) */}
-      <div className="sm:hidden bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-blue-900 text-white font-extrabold flex items-center justify-center text-sm shadow-sm ring-4 ring-blue-100">
-            {currentStep}
-          </div>
-          <div>
-            <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
-              Langkah {currentStep} dari {steps.length}
-            </span>
-            <p className="text-sm font-bold text-slate-900 leading-tight">
-              {steps[currentStep - 1]?.label}
-            </p>
-          </div>
-        </div>
-        <div className="flex gap-1.5">
-          {steps.map((_, i) => (
+      {/* Mobile Stepper: Connected vertical steps (< 640px) */}
+      <div className="sm:hidden space-y-3">
+        {steps.map((step, idx) => {
+          const stepNum = idx + 1;
+          const isCompleted = stepNum < currentStep;
+          const isCurrent = stepNum === currentStep;
+
+          return (
             <div
-              key={i}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i + 1 === currentStep
-                  ? "w-6 bg-amber-500"
-                  : i + 1 < currentStep
-                  ? "w-2.5 bg-emerald-500"
-                  : "w-2 bg-slate-200"
+              key={step.id}
+              className={`p-4 rounded-2xl border transition-all ${
+                isCurrent
+                  ? "bg-white shadow-xs border-2 border-amber-400 ring-2 ring-amber-100/60"
+                  : isCompleted
+                  ? "bg-emerald-50/50 border-emerald-200"
+                  : "bg-white border-slate-200/80"
               }`}
-            />
-          ))}
-        </div>
+            >
+              <div className="flex items-start gap-3.5">
+                <div
+                  className={`w-9 h-9 rounded-full flex items-center justify-center font-extrabold text-xs shrink-0 mt-0.5 ${
+                    isCompleted
+                      ? "bg-emerald-600 text-white"
+                      : isCurrent
+                      ? "bg-blue-900 text-amber-400 ring-2 ring-amber-200"
+                      : "bg-slate-200 text-slate-600"
+                  }`}
+                >
+                  {isCompleted ? <Check className="w-4 h-4 stroke-[3]" /> : stepNum}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <span
+                      className={`text-[10px] font-extrabold uppercase tracking-wider ${
+                        isCurrent
+                          ? "text-blue-900"
+                          : isCompleted
+                          ? "text-emerald-700"
+                          : "text-slate-400"
+                      }`}
+                    >
+                      {step.sublabel || `Langkah ${stepNum}`}
+                    </span>
+                    {isCurrent && (
+                      <span className="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
+                        Tahap Ini
+                      </span>
+                    )}
+                  </div>
+                  <h4 className="text-sm font-bold text-slate-900 mt-0.5 leading-snug">
+                    {step.label}
+                  </h4>
+                  {step.description && (
+                    <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                      {step.description}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Desktop & Tablet Stepper View (>= 640px) */}

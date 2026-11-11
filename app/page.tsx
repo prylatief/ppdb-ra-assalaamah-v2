@@ -285,20 +285,20 @@ export default function HomePage() {
 
       {/* 3. OVERLAPPING 4-COLUMN STATS BAR */}
       <section className="-mt-14 relative z-20 max-w-6xl mx-auto px-4 sm:px-6 w-full">
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200/90 p-6 sm:p-8 grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        <div className="bg-white rounded-2xl shadow-xl border border-slate-200/90 p-4 sm:p-8 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           
           {/* Stat 1: Soft Blue */}
           <motion.div
             whileHover={shouldReduceMotion ? {} : { y: -2 }}
             transition={motionTokens.spring.snappy}
-            className="flex items-center gap-4"
+            className="flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-4 p-3 sm:p-0 rounded-xl bg-slate-50/70 sm:bg-transparent border border-slate-100 sm:border-none"
           >
-            <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
-              <Users className="w-6 h-6" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+              <Users className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <div>
-              <p className="text-xl sm:text-2xl font-extrabold text-blue-900">4 – 6 Th</p>
-              <p className="text-xs font-semibold text-slate-500">Kelompok A &amp; B</p>
+            <div className="min-w-0 w-full sm:w-auto">
+              <p className="text-base sm:text-2xl font-extrabold text-blue-900 leading-tight">4 – 6 Th</p>
+              <p className="text-[11px] sm:text-xs font-semibold text-slate-500 mt-0.5 leading-tight">Kelompok A &amp; B</p>
             </div>
           </motion.div>
 
@@ -306,14 +306,14 @@ export default function HomePage() {
           <motion.div
             whileHover={shouldReduceMotion ? {} : { y: -2 }}
             transition={motionTokens.spring.snappy}
-            className="flex items-center gap-4"
+            className="flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-4 p-3 sm:p-0 rounded-xl bg-slate-50/70 sm:bg-transparent border border-slate-100 sm:border-none"
           >
-            <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-              <BookOpen className="w-6 h-6" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <BookOpen className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <div>
-              <p className="text-xl sm:text-2xl font-extrabold text-emerald-800">Tilawati</p>
-              <p className="text-xs font-semibold text-slate-500">Tahfidz Juz 30</p>
+            <div className="min-w-0 w-full sm:w-auto">
+              <p className="text-base sm:text-2xl font-extrabold text-emerald-800 leading-tight">Tilawati</p>
+              <p className="text-[11px] sm:text-xs font-semibold text-slate-500 mt-0.5 leading-tight">Tahfidz Juz 30</p>
             </div>
           </motion.div>
 
@@ -321,14 +321,14 @@ export default function HomePage() {
           <motion.div
             whileHover={shouldReduceMotion ? {} : { y: -2 }}
             transition={motionTokens.spring.snappy}
-            className="flex items-center gap-4"
+            className="flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-4 p-3 sm:p-0 rounded-xl bg-slate-50/70 sm:bg-transparent border border-slate-100 sm:border-none"
           >
-            <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
-              <Clock className="w-6 h-6" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+              <Clock className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <div>
-              <p className="text-xl sm:text-2xl font-extrabold text-amber-900">5 Hari</p>
-              <p className="text-xs font-semibold text-slate-500">Senin – Jumat Pagi</p>
+            <div className="min-w-0 w-full sm:w-auto">
+              <p className="text-base sm:text-2xl font-extrabold text-amber-900 leading-tight">5 Hari</p>
+              <p className="text-[11px] sm:text-xs font-semibold text-slate-500 mt-0.5 leading-tight">Senin – Jumat Pagi</p>
             </div>
           </motion.div>
 
@@ -336,14 +336,14 @@ export default function HomePage() {
           <motion.div
             whileHover={shouldReduceMotion ? {} : { y: -2 }}
             transition={motionTokens.spring.snappy}
-            className="flex items-center gap-4"
+            className="flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-2 sm:gap-4 p-3 sm:p-0 rounded-xl bg-slate-50/70 sm:bg-transparent border border-slate-100 sm:border-none"
           >
-            <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-              <Calendar className="w-6 h-6" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <Calendar className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <div>
-              <p className="text-xl sm:text-2xl font-extrabold text-emerald-800">2 Gelombang</p>
-              <p className="text-xs font-semibold text-slate-500">Okt 2026 – Apr 2027</p>
+            <div className="min-w-0 w-full sm:w-auto">
+              <p className="text-base sm:text-2xl font-extrabold text-emerald-800 leading-tight">2 Gelombang</p>
+              <p className="text-[11px] sm:text-xs font-semibold text-slate-500 mt-0.5 leading-tight">Okt 2026 – Apr 2027</p>
             </div>
           </motion.div>
 
@@ -364,14 +364,14 @@ export default function HomePage() {
           >
             {/* Decorative yellow dot pattern */}
             <div
-              className="absolute -top-6 -left-6 w-32 h-32 opacity-30 pointer-events-none"
+              className="hidden sm:block absolute -top-6 -left-6 w-32 h-32 opacity-30 pointer-events-none"
               style={{
                 backgroundImage: `radial-gradient(#f59e0b 2px, transparent 2px)`,
                 backgroundSize: "16px 16px",
               }}
             />
             <div
-              className="absolute -bottom-6 -right-6 w-32 h-32 opacity-30 pointer-events-none"
+              className="hidden sm:block absolute -bottom-6 -right-6 w-32 h-32 opacity-30 pointer-events-none"
               style={{
                 backgroundImage: `radial-gradient(#059669 2px, transparent 2px)`,
                 backgroundSize: "16px 16px",
@@ -610,19 +610,19 @@ export default function HomePage() {
         <div className="grid sm:grid-cols-2 gap-4 mb-8">
           <motion.div
             whileHover={shouldReduceMotion ? {} : { y: -2 }}
-            className="rounded-2xl p-6 border-2 border-emerald-500/40 bg-emerald-50/60 shadow-xs flex items-start gap-4"
+            className="rounded-2xl p-4 sm:p-6 border-2 border-emerald-500/40 bg-emerald-50/60 shadow-xs flex items-start gap-3.5 sm:gap-4"
           >
-            <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xl shrink-0 shadow-xs">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-lg sm:text-xl shrink-0 shadow-xs">
               1️⃣
             </div>
-            <div>
+            <div className="min-w-0">
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-800">
                 Pendaftaran Gelombang 1
               </span>
-              <p className="text-lg font-extrabold text-emerald-950 mt-0.5">
+              <p className="text-base sm:text-lg font-extrabold text-emerald-950 mt-0.5 leading-snug">
                 Oktober 2026 – Januari 2027
               </p>
-              <p className="text-xs text-emerald-700 mt-1">
+              <p className="text-xs text-emerald-700 mt-1 leading-relaxed">
                 Disarankan mendaftar lebih awal karena kuota kelas terbatas.
               </p>
             </div>
@@ -630,19 +630,19 @@ export default function HomePage() {
 
           <motion.div
             whileHover={shouldReduceMotion ? {} : { y: -2 }}
-            className="rounded-2xl p-6 border-2 border-amber-500/40 bg-amber-50/60 shadow-xs flex items-start gap-4"
+            className="rounded-2xl p-4 sm:p-6 border-2 border-amber-500/40 bg-amber-50/60 shadow-xs flex items-start gap-3.5 sm:gap-4"
           >
-            <div className="w-12 h-12 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center text-xl shrink-0 shadow-xs">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center text-lg sm:text-xl shrink-0 shadow-xs">
               2️⃣
             </div>
-            <div>
+            <div className="min-w-0">
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-800">
                 Pendaftaran Gelombang 2
               </span>
-              <p className="text-lg font-extrabold text-amber-950 mt-0.5">
+              <p className="text-base sm:text-lg font-extrabold text-amber-950 mt-0.5 leading-snug">
                 Februari – April 2027
               </p>
-              <p className="text-xs text-amber-700 mt-1">
+              <p className="text-xs text-amber-700 mt-1 leading-relaxed">
                 Akan ditutup sewaktu-waktu jika kapasitas rombel telah terpenuhi.
               </p>
             </div>
@@ -650,7 +650,7 @@ export default function HomePage() {
         </div>
 
         {/* Biaya Card */}
-        <div className="section-card p-6 sm:p-8 space-y-6">
+        <div className="section-card p-4 sm:p-8 space-y-6">
           <BiayaTable />
 
           <div className="bg-slate-50/80 rounded-2xl p-5 border border-slate-200 text-xs sm:text-sm text-slate-700 space-y-2.5">
@@ -826,7 +826,7 @@ export default function HomePage() {
 
       {/* 11. PRE-FOOTER CTA BANNER */}
       <section className="py-12 max-w-6xl mx-auto px-4 sm:px-6 w-full">
-        <div className="bg-gradient-to-r from-emerald-600 via-blue-800 to-blue-900 text-white rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden text-center lg:text-left flex flex-col lg:flex-row items-center justify-between gap-8">
+        <div className="bg-gradient-to-r from-emerald-600 via-blue-800 to-blue-900 text-white rounded-3xl p-6 sm:p-12 shadow-2xl relative overflow-hidden text-center lg:text-left flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8">
           
           <div className="space-y-3 max-w-xl">
             <span className="inline-block bg-amber-400 text-slate-950 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
