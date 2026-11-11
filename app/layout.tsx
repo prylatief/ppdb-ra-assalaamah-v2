@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, Fredoka } from "next/font/google";
 import "./globals.css";
 
 const pjs = Plus_Jakarta_Sans({
   variable: "--font-pjs",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
+
+const fredoka = Fredoka({
+  variable: "--font-fredoka",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
   display: "swap",
 });
 
@@ -27,11 +34,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`${pjs.variable} h-full`}>
+    <html lang="id" className={`${pjs.variable} ${fredoka.variable} h-full`}>
       <head>
         <link rel="icon" href="/logo-ra.jpg" type="image/jpeg" />
       </head>
-      <body className="min-h-full flex flex-col bg-slate-50 text-slate-800 antialiased">
+      <body className="min-h-full flex flex-col bg-[#FCFDF9] text-[#112F20] antialiased">
         {children}
       </body>
     </html>
