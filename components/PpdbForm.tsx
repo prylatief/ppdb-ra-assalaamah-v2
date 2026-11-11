@@ -202,6 +202,7 @@ function FieldControl({ f, cols, onCopyAddress, onDigitInput, digitCounts, formR
 // ---- Main form component ----
 export default function PpdbForm() {
   const formRef = useRef<HTMLFormElement>(null);
+  const topAnchorRef = useRef<HTMLDivElement>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [showAll, setShowAll] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -255,7 +256,17 @@ export default function PpdbForm() {
   function goToStep(step: number, scroll = true) {
     if (showAll) return;
     setCurrentStep(step);
-    if (scroll) window.scrollTo({ top: 0, behavior: "smooth" });
+    // Scroll ke bagian atas FORMULIR (bukan ke atas halaman/Hero Section),
+    // beri sedikit jarak agar tidak tertutup Navbar sticky.
+    if (scroll) {
+      requestAnimationFrame(() => {
+        const el = topAnchorRef.current;
+        if (!el) return;
+        const navbarOffset = 88; // tinggi navbar sticky + jarak aman
+        const top = el.getBoundingClientRect().top + window.scrollY - navbarOffset;
+        window.scrollTo({ top, behavior: "smooth" });
+      });
+    }
   }
 
   function toggleMode() {
@@ -339,7 +350,14 @@ export default function PpdbForm() {
       setUploadPicked({});
       setUploadInfos({});
       setSuccess(true);
-      window.scrollTo({ top: 0 });
+      requestAnimationFrame(() => {
+        const el = topAnchorRef.current;
+        if (el) {
+          const navbarOffset = 88;
+          const top = el.getBoundingClientRect().top + window.scrollY - navbarOffset;
+          window.scrollTo({ top, behavior: "smooth" });
+        }
+      });
       setReceipt({ data: full, showWA: true });
     } catch {
       setErrorMsg(
@@ -354,6 +372,8 @@ export default function PpdbForm() {
   if (success && lastSaved) {
     return (
       <>
+        {/* Anchor scroll untuk tampilan sukses */}
+        <div ref={topAnchorRef} />
         {receipt && (
           <ReceiptModal
             data={receipt.data}
@@ -417,6 +437,9 @@ export default function PpdbForm() {
           onClose={() => setReceipt(null)}
         />
       )}
+
+      {/* Anchor scroll: target lompatan saat ganti step (bukan ke atas halaman) */}
+      <div ref={topAnchorRef} />
 
       {/* Top bar */}
       <div className="bg-white rounded-2xl shadow-xs border border-slate-200/90 p-4 md:p-5 mb-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
