@@ -207,14 +207,14 @@ export default function HomePage() {
 
               {/* 2 Tombol CTA Chunky */}
               <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
-                <a
-                  href="#formulir"
+                <Link
+                  href="/daftar"
                   className="btn-chunky-yellow text-base sm:text-lg px-8 py-3.5 tracking-wide shadow-[0_5px_0_#D97706]"
                 >
                   <Sparkles className="w-5 h-5 mr-2" />
                   <span>Daftar PPDB</span>
                   <ArrowRight className="w-5 h-5 ml-2" />
-                </a>
+                </Link>
 
                 <a
                   href={`https://wa.me/${formatWAForLink(CONFIG.ADMIN_WA)}?text=Assalamu%27alaikum%20Panitia%20PPDB%20RA%20Assalaamah%2C%20saya%20ingin%20tanya%20info%20pendaftaran`}
@@ -710,25 +710,61 @@ export default function HomePage() {
         <ArcStepper steps={alurSteps} currentStep={1} />
       </section>
 
-      {/* 9. FORMULIR PENDAFTARAN (PPDB ONLINE) */}
-      <section id="formulir" className="py-16 lg:py-24 bg-gradient-to-b from-[#FEF3C7]/40 via-white to-white border-t border-[#1E6B49]/15">
+      {/* 9. AJAKAN PENDAFTARAN ONLINE (CTA SHOWCASE) */}
+      <section id="formulir" className="py-16 sm:py-24 bg-gradient-to-b from-[#FEF3C7]/40 via-white to-white border-t border-[#1E6B49]/15">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          
-          <div className="text-center space-y-3 mb-10">
-            <span className="inline-block bg-[#FEF3C7] text-[#B45309] border border-[#FBBF24]/50 text-xs font-heading font-bold uppercase px-4 py-1.5 rounded-full tracking-wider shadow-2xs">
-              Formulir Pendaftaran Siswa Baru
-            </span>
-            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-[#1E6B49] tracking-tight">
-              Pendaftaran Online TA 2027/2028
+          <div className="bg-white rounded-3xl p-6 sm:p-12 border-[3px] border-[#1E6B49] shadow-[0_8px_0_#1E6B49] text-center space-y-6 relative overflow-hidden">
+            <div className="inline-flex items-center gap-2 bg-[#FEF3C7] border-2 border-[#FBBF24]/60 text-[#B45309] text-xs font-heading font-bold px-4 py-1.5 rounded-full shadow-2xs">
+              <Sparkles className="w-4 h-4 text-[#F59E0B]" />
+              <span>Pendaftaran Murid Baru TA 2027/2028</span>
+            </div>
+
+            <h2 className="font-heading text-2xl sm:text-4xl font-bold text-[#1E6B49] tracking-tight">
+              Siap Menjadi Bagian dari <br />
+              Keluarga Besar RA Assalaamah?
             </h2>
-            <p className="font-body text-[#112F20]/75 text-sm max-w-xl mx-auto font-medium">
-              Silakan isi 39 kolom data berikut dengan teliti. Data otomatis tersimpan di perangkat ini (aman bila keluar sejenak).
+
+            <p className="font-body text-[#112F20]/75 text-sm sm:text-base max-w-xl mx-auto font-medium leading-relaxed">
+              Formulir PPDB kini terpisah dalam halaman khusus yang fokus, nyaman, dan ramah pengguna di layar HP. Dilengkapi fitur autosave otomatis agar aman bila Anda mengisi sambil menyiapkan berkas.
+            </p>
+
+            {/* 3 Keuntungan Mengisi Form Online */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2 text-left">
+              <div className="bg-[#FCFDF9] p-4 rounded-2xl border-2 border-[#1E6B49]/15 space-y-1">
+                <span className="text-xl">📋</span>
+                <p className="font-heading font-bold text-xs sm:text-sm text-[#112F20]">39 Data Terstruktur</p>
+                <p className="text-[11px] sm:text-xs text-[#112F20]/70 font-medium">4 bagian rapi: Anak, Fisik, Ayah, dan Ibu kandung.</p>
+              </div>
+
+              <div className="bg-[#FCFDF9] p-4 rounded-2xl border-2 border-[#FBBF24]/50 space-y-1">
+                <span className="text-xl">💾</span>
+                <p className="font-heading font-bold text-xs sm:text-sm text-[#112F20]">Autosave di HP</p>
+                <p className="text-[11px] sm:text-xs text-[#112F20]/70 font-medium">Draf tersimpan otomatis, aman keluar masuk aplikasi.</p>
+              </div>
+
+              <div className="bg-[#FCFDF9] p-4 rounded-2xl border-2 border-[#3CB371]/30 space-y-1">
+                <span className="text-xl">📲</span>
+                <p className="font-heading font-bold text-xs sm:text-sm text-[#112F20]">Bukti &amp; WhatsApp</p>
+                <p className="text-[11px] sm:text-xs text-[#112F20]/70 font-medium">Terbit nomor registrasi &amp; tombol kirim konfirmasi WA.</p>
+              </div>
+            </div>
+
+            {/* Tombol Buka Halaman /daftar */}
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3.5">
+              <Link
+                href="/daftar"
+                className="w-full sm:w-auto btn-chunky-yellow text-base sm:text-lg px-8 py-4 shadow-[0_5px_0_#D97706]"
+              >
+                <Sparkles className="w-5 h-5 mr-2" />
+                <span>Buka Formulir Pendaftaran Online (39 Data)</span>
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Link>
+            </div>
+
+            <p className="text-xs text-[#112F20]/60 font-medium">
+              * Pengisian butuh waktu ±5 menit. Siapkan Kartu Keluarga (KK) dan Akta Kelahiran ananda.
             </p>
           </div>
-
-          {/* Component Formulir PPDB 39 Field */}
-          <PpdbForm />
-
         </div>
       </section>
 
@@ -776,12 +812,12 @@ export default function HomePage() {
               <MessageCircle className="w-5 h-5 mr-2" />
               <span>Chat WhatsApp Panitia</span>
             </a>
-            <a
-              href="#formulir"
+            <Link
+              href="/daftar"
               className="inline-flex items-center justify-center gap-2 bg-white/15 hover:bg-white/25 text-white border-2 border-white/40 font-heading font-bold text-sm sm:text-base px-6 py-3.5 rounded-full transition"
             >
-              <span>Langsung Daftar →</span>
-            </a>
+              <span>Buka Form Pendaftaran →</span>
+            </Link>
           </div>
 
         </div>
@@ -897,13 +933,13 @@ export default function HomePage() {
           <MessageCircle className="w-4 h-4 text-[#1E6B49]" />
           <span>Tanya WA</span>
         </a>
-        <a
-          href="#formulir"
+        <Link
+          href="/daftar"
           className="w-2/3 flex items-center justify-center gap-2 btn-chunky-yellow text-sm py-3 shadow-[0_4px_0_#D97706]"
         >
           <Sparkles className="w-4 h-4 text-[#112F20]" />
           <span>DAFTAR PPDB</span>
-        </a>
+        </Link>
       </div>
     </div>
   );

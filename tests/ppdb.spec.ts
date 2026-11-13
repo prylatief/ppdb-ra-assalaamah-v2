@@ -61,19 +61,24 @@ async function fillStep4(page: Page) {
   await page.selectOption('[name="kondisiIbu"]', "Masih Hidup");
 }
 
-// ==== TEST 1: Console error 0 di halaman utama (390px dan 1280px) ====
+// ==== TEST 1: Console error 0 di halaman utama, /daftar, dan /admin (390px dan 1280px) ====
 for (const width of [390, 1280]) {
-  test(`T1: 0 JS error console – lebar ${width}px`, async ({ page }) => {
+  test(`T1: 0 JS error console beranda – lebar ${width}px`, async ({ page }) => {
     const errors: string[] = [];
     page.on("pageerror", (err) => errors.push(err.message));
     await page.setViewportSize({ width, height: 844 });
     await page.goto(BASE, { waitUntil: "networkidle" });
     expect(errors.filter((e) => !e.includes("Failed to load resource"))).toHaveLength(0);
   });
-}
 
-// ==== TEST 2: Console error 0 di /admin (390px dan 1280px) ====
-for (const width of [390, 1280]) {
+  test(`T1: 0 JS error console /daftar – lebar ${width}px`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on("pageerror", (err) => errors.push(err.message));
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto(BASE + "/daftar", { waitUntil: "networkidle" });
+    expect(errors.filter((e) => !e.includes("Failed to load resource"))).toHaveLength(0);
+  });
+
   test(`T1: 0 JS error console /admin – lebar ${width}px`, async ({ page }) => {
     const errors: string[] = [];
     page.on("pageerror", (err) => errors.push(err.message));
@@ -84,7 +89,7 @@ for (const width of [390, 1280]) {
 }
 
 // ==== TEST 3: Formulir 39 field + mock submit + nomor registrasi tampil ====
-test("T3: Isi 39 field, submit dengan mock, nomor registrasi tampil", async ({ page }) => {
+test("T3: Isi 39 field di /daftar, submit dengan mock, nomor registrasi tampil", async ({ page }) => {
   // Mock API
   await page.route("**script.google.com**", (route) => {
     route.fulfill({
@@ -94,7 +99,7 @@ test("T3: Isi 39 field, submit dengan mock, nomor registrasi tampil", async ({ p
     });
   });
 
-  await page.goto(BASE, { waitUntil: "networkidle" });
+  await page.goto(BASE + "/daftar", { waitUntil: "networkidle" });
 
   // Tampilkan semua bagian sekaligus
   await page.click('button:has-text("Tampilkan Semua")');
@@ -183,9 +188,14 @@ test("T6: Tidak ada password hardcoded, API_URL identik dengan situs lama", asyn
 });
 
 // ==== TEST 7: Tidak ada scroll horizontal di 390px ====
-test("T7: Tidak ada scroll horizontal di 390px", async ({ page }) => {
+test("T7: Tidak ada scroll horizontal di 390px (beranda & /daftar)", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
+
   await page.goto(BASE, { waitUntil: "networkidle" });
-  const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
-  expect(scrollWidth).toBeLessThanOrEqual(390);
+  const scrollWidthHome = await page.evaluate(() => document.documentElement.scrollWidth);
+  expect(scrollWidthHome).toBeLessThanOrEqual(390);
+
+  await page.goto(BASE + "/daftar", { waitUntil: "networkidle" });
+  const scrollWidthDaftar = await page.evaluate(() => document.documentElement.scrollWidth);
+  expect(scrollWidthDaftar).toBeLessThanOrEqual(390);
 });

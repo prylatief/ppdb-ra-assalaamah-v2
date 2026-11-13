@@ -8,14 +8,14 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-    { label: "Beranda", href: "#beranda" },
-    { label: "Profil", href: "#profil" },
-    { label: "Keunggulan", href: "#keunggulan" },
-    { label: "Program", href: "#program" },
-    { label: "Biaya & Jadwal", href: "#biaya" },
-    { label: "Alur PPDB", href: "#alur" },
-    { label: "Galeri", href: "#galeri" },
-    { label: "FAQ", href: "#faq" },
+    { label: "Beranda", href: "/#beranda" },
+    { label: "Profil", href: "/#profil" },
+    { label: "Keunggulan", href: "/#keunggulan" },
+    { label: "Program", href: "/#program" },
+    { label: "Biaya & Jadwal", href: "/#biaya" },
+    { label: "Alur PPDB", href: "/#alur" },
+    { label: "Galeri", href: "/#galeri" },
+    { label: "FAQ", href: "/#faq" },
   ];
 
   return (
@@ -62,23 +62,23 @@ export default function Navbar() {
             >
               Admin
             </Link>
-            <a
-              href="#formulir"
+            <Link
+              href="/daftar"
               className="btn-chunky-yellow text-xs sm:text-sm px-5 py-2.5 tracking-wide"
             >
               <Sparkles className="w-4 h-4 text-[#112F20] mr-1.5 animate-pulse" />
               <span>DAFTAR PPDB</span>
-            </a>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="flex items-center sm:hidden gap-2">
-            <a
-              href="#formulir"
+            <Link
+              href="/daftar"
               className="btn-chunky-yellow text-xs px-3.5 py-2"
             >
               Daftar
-            </a>
+            </Link>
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
@@ -105,13 +105,13 @@ export default function Navbar() {
             </a>
           ))}
           <div className="pt-2 border-t border-slate-200/80 flex flex-col gap-2">
-            <a
-              href="#formulir"
+            <Link
+              href="/daftar"
               onClick={() => setIsOpen(false)}
               className="w-full text-center btn-chunky-yellow text-sm py-2.5"
             >
               ✍️ DAFTAR PPDB SEKARANG
-            </a>
+            </Link>
             <Link
               href="/admin"
               onClick={() => setIsOpen(false)}
