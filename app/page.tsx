@@ -27,6 +27,7 @@ import SmartPhoto from "@/components/SmartPhoto";
 import MascotIllustration from "@/components/MascotIllustration";
 import PhotoMarquee, { MARQUEE_ROW_1, MARQUEE_ROW_2 } from "@/components/PhotoMarquee";
 import LightboxModal, { type LightboxItem } from "@/components/LightboxModal";
+import WelcomePopup from "@/components/WelcomePopup";
 import BiayaTable from "@/components/BiayaTable";
 import PpdbForm from "@/components/PpdbForm";
 import { ArcAccordion, type AccordionItem } from "@/components/arc/ArcAccordion";
@@ -1121,6 +1122,9 @@ export default function HomePage() {
         onClose={() => setLightboxIndex(null)}
         onNavigate={(idx) => setLightboxIndex(idx)}
       />
+
+      {/* Pop-up Sambutan Otomatis Ramah Anak */}
+      <WelcomePopup />
     </div>
   );
 }
