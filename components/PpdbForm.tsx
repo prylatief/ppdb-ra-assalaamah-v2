@@ -14,40 +14,130 @@ import ReceiptModal from "./ReceiptModal";
 
 // ---- Upload helpers ----
 const UPLOAD_FIELDS = ["aktaKelahiran", "kartuKeluarga"] as const;
-const ALLOWED_UPLOAD_TYPES = ["image/jpeg", "image/png", "application/pdf"];
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+
+interface UploadItem {
+  name: string;
+  mimeType: string;
+  dataBase64: string;
+  previewUrl?: string | null;
+  sizeStr?: string;
+}
 
 function describeSize(bytes: number) {
   return bytes >= 1024 * 1024 ? (bytes / (1024 * 1024)).toFixed(1) + " MB" : Math.round(bytes / 1024) + " KB";
 }
 
-function shrinkImage(file: File): Promise<File> {
+function detectAndNormalizeFile(file: File): {
+  isValid: boolean;
+  normalizedMime: "image/jpeg" | "image/png" | "application/pdf" | "";
+  isImage: boolean;
+  isPdf: boolean;
+  safeName: string;
+} {
+  const name = file.name || "berkas";
+  const ext = name.split(".").pop()?.toLowerCase() || "";
+  const rawType = (file.type || "").toLowerCase();
+
+  // PDF
+  if (rawType === "application/pdf" || rawType === "application/x-pdf" || ext === "pdf") {
+    return {
+      isValid: true,
+      normalizedMime: "application/pdf",
+      isImage: false,
+      isPdf: true,
+      safeName: name.toLowerCase().endsWith(".pdf") ? name : `${name}.pdf`,
+    };
+  }
+
+  // PNG
+  if (rawType === "image/png" || ext === "png") {
+    return {
+      isValid: true,
+      normalizedMime: "image/png",
+      isImage: true,
+      isPdf: false,
+      safeName: name.toLowerCase().endsWith(".png") ? name : `${name}.png`,
+    };
+  }
+
+  // JPEG / JPG / HEIC / HEIF / WEBP / any other mobile camera format
+  if (
+    rawType.startsWith("image/") ||
+    ["jpg", "jpeg", "heic", "heif", "webp", "bmp"].includes(ext)
+  ) {
+    const base = name.replace(/\.[^/.]+$/, "");
+    return {
+      isValid: true,
+      normalizedMime: "image/jpeg",
+      isImage: true,
+      isPdf: false,
+      safeName: `${base}.jpg`,
+    };
+  }
+
+  return {
+    isValid: false,
+    normalizedMime: "",
+    isImage: false,
+    isPdf: false,
+    safeName: name,
+  };
+}
+
+// Mengompres foto secara aman di browser client:
+// Foto kamera HP (3-8MB) dikecilkan ke maks 1600px dengan kualitas JPEG 0.82
+// Menghasilkan ukuran ~150KB-300KB yang tajam & ringan diunggah ke Google Apps Script tanpa timeout.
+function compressImage(file: File): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const img = new window.Image();
     const url = URL.createObjectURL(file);
     img.onload = () => {
       URL.revokeObjectURL(url);
-      const scale = Math.min(1, 1600 / Math.max(img.width, img.height));
+      const maxDim = 1600;
+      let width = img.naturalWidth || img.width;
+      let height = img.naturalHeight || img.height;
+      if (width > maxDim || height > maxDim) {
+        const scale = maxDim / Math.max(width, height);
+        width = Math.round(width * scale);
+        height = Math.round(height * scale);
+      }
       const canvas = document.createElement("canvas");
-      canvas.width = Math.round(img.width * scale);
-      canvas.height = Math.round(img.height * scale);
-      canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
-      canvas.toBlob((blob) => {
-        if (!blob) { reject(new Error("Gagal memproses gambar.")); return; }
-        resolve(new File([blob], file.name.replace(/\.\w+$/, "") + ".jpg", { type: "image/jpeg" }));
-      }, "image/jpeg", 0.85);
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        reject(new Error("Canvas tidak tersedia"));
+        return;
+      }
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        (blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error("Gagal mengompres gambar"));
+        },
+        "image/jpeg",
+        0.82
+      );
     };
-    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Gambar tidak dapat dibaca.")); };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Foto tidak dapat dibaca. Mohon gunakan format JPG atau PNG."));
+    };
     img.src = url;
   });
 }
 
-function fileToBase64(file: File): Promise<string> {
+function blobToBase64(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload = () => resolve(String(r.result).split(",")[1] || "");
-    r.onerror = () => reject(new Error("Gagal membaca berkas."));
-    r.readAsDataURL(file);
+    const reader = new FileReader();
+    reader.onload = () => {
+      const res = String(reader.result || "");
+      const base64 = res.split(",")[1] || "";
+      resolve(base64);
+    };
+    reader.onerror = () => reject(new Error("Gagal membaca berkas."));
+    reader.readAsDataURL(blob);
   });
 }
 
@@ -211,7 +301,7 @@ export default function PpdbForm() {
   const [lastSaved, setLastSaved] = useState<RegistrationData | null>(null);
   const [receipt, setReceipt] = useState<{ data: RegistrationData; showWA: boolean } | null>(null);
   const [digitCounts, setDigitCounts] = useState<Record<string, number>>({});
-  const [uploadPicked, setUploadPicked] = useState<Record<string, { name: string; mimeType: string; dataBase64: string } | null>>({});
+  const [uploadPicked, setUploadPicked] = useState<Record<string, UploadItem | null>>({});
   const [uploadInfos, setUploadInfos] = useState<Record<string, { text: string; cls: string }>>({});
 
   // ---- Draft ----
@@ -273,11 +363,29 @@ export default function PpdbForm() {
     setShowAll((prev) => !prev);
   }
 
+  function removeUpload(key: string) {
+    const input = document.getElementById(`file_${key}`) as HTMLInputElement | null;
+    if (input) input.value = "";
+    setUploadPicked((prev) => {
+      const next = { ...prev };
+      if (next[key]?.previewUrl) {
+        URL.revokeObjectURL(next[key]!.previewUrl!);
+      }
+      delete next[key];
+      return next;
+    });
+    setUploadInfos((prev) => ({
+      ...prev,
+      [key]: { text: "", cls: "text-[11px] text-slate-500 mt-1" },
+    }));
+  }
+
   function resetDraft() {
     if (!confirm("Kosongkan seluruh isian formulir?")) return;
     clearDraft();
     formRef.current?.reset();
     setDigitCounts({});
+    UPLOAD_FIELDS.forEach((key) => removeUpload(key));
     setErrorMsg(null);
     goToStep(1);
   }
@@ -299,25 +407,70 @@ export default function PpdbForm() {
   // ---- Upload ----
   async function pickUpload(key: string, input: HTMLInputElement) {
     const f = input.files?.[0];
-    setUploadPicked((prev) => ({ ...prev, [key]: null }));
-    setUploadInfos((prev) => ({ ...prev, [key]: { text: "", cls: "text-[11px] text-slate-500 mt-1" } }));
     if (!f) return;
+
+    setUploadInfos((prev) => ({
+      ...prev,
+      [key]: { text: "⏳ Sedang memproses & mengompres foto...", cls: "text-[11px] text-amber-600 font-semibold mt-1" },
+    }));
+
     try {
-      if (!ALLOWED_UPLOAD_TYPES.includes(f.type)) throw new Error("Tipe berkas tidak didukung. Gunakan JPG, PNG, atau PDF.");
-      let use = f;
-      if (f.type !== "application/pdf" && f.size > MAX_UPLOAD_BYTES) use = await shrinkImage(f);
-      if (use.size > MAX_UPLOAD_BYTES) throw new Error(`Ukuran berkas ${describeSize(use.size)} melebihi 5 MB.`);
-      const dataBase64 = await fileToBase64(use);
-      setUploadPicked((prev) => ({ ...prev, [key]: { name: use.name, mimeType: use.type, dataBase64 } }));
+      const detected = detectAndNormalizeFile(f);
+      if (!detected.isValid) {
+        throw new Error("Format tidak didukung. Mohon gunakan foto (JPG/PNG) atau PDF.");
+      }
+
+      let finalBlob: Blob = f;
+      let finalName = detected.safeName;
+      let finalMime = detected.normalizedMime;
+
+      if (detected.isImage) {
+        // Otomatis optimasi semua foto HP: mengurangi ukuran dari 3-8MB jadi ~150-300KB
+        // Tulisan dokumen tetap tajam & tidak membuat koneksi HP/Google Apps Script timeout!
+        finalBlob = await compressImage(f);
+        finalMime = "image/jpeg";
+        if (!finalName.toLowerCase().endsWith(".jpg") && !finalName.toLowerCase().endsWith(".jpeg")) {
+          finalName = `${finalName.replace(/\.[^/.]+$/, "")}.jpg`;
+        }
+      } else if (detected.isPdf) {
+        if (f.size > MAX_UPLOAD_BYTES) {
+          throw new Error(`Ukuran PDF (${describeSize(f.size)}) melebihi batas 5 MB. Bisa dilewati & dikirim via WhatsApp panitia.`);
+        }
+      }
+
+      if (finalBlob.size > MAX_UPLOAD_BYTES) {
+        throw new Error(`Ukuran berkas (${describeSize(finalBlob.size)}) melebihi 5 MB.`);
+      }
+
+      const dataBase64 = await blobToBase64(finalBlob);
+      const previewUrl = detected.isImage ? URL.createObjectURL(finalBlob) : null;
+
+      setUploadPicked((prev) => ({
+        ...prev,
+        [key]: {
+          name: finalName,
+          mimeType: finalMime,
+          dataBase64,
+          previewUrl,
+          sizeStr: describeSize(finalBlob.size),
+        },
+      }));
+
       setUploadInfos((prev) => ({
         ...prev,
         [key]: {
-          text: `✔ ${use.name} (${describeSize(use.size)}${use !== f ? ", dikecilkan otomatis" : ""}) — siap dikirim`,
-          cls: "text-[11px] text-emerald-600 font-semibold mt-1",
+          text: `✔ ${finalName} (${describeSize(finalBlob.size)}${finalBlob.size < f.size ? ", dioptimasi otomatis" : ""}) — siap dikirim`,
+          cls: "text-[11px] text-emerald-700 font-semibold mt-1",
         },
       }));
     } catch (err) {
       input.value = "";
+      setUploadPicked((prev) => {
+        const next = { ...prev };
+        if (next[key]?.previewUrl) URL.revokeObjectURL(next[key]!.previewUrl!);
+        delete next[key];
+        return next;
+      });
       setUploadInfos((prev) => ({
         ...prev,
         [key]: { text: `✖ ${(err as Error).message}`, cls: "text-[11px] text-rose-600 font-semibold mt-1" },
@@ -334,9 +487,20 @@ export default function PpdbForm() {
     const data: Record<string, string> = {};
     new FormData(formRef.current!).forEach((v, k) => { data[k] = String(v).trim(); });
 
+    // Filter clean files payload without UI preview fields
+    const filesToSend: Record<string, { name: string; mimeType: string; dataBase64: string }> = {};
+    Object.entries(uploadPicked).forEach(([k, v]) => {
+      if (v && v.dataBase64) {
+        filesToSend[k] = { name: v.name, mimeType: v.mimeType, dataBase64: v.dataBase64 };
+      }
+    });
+
+    const hasFiles = Object.keys(filesToSend).length > 0;
     setSubmitting(true);
+
     try {
-      const r = await api("submit", { data, files: uploadPicked });
+      // If sending files, give 60s timeout so GAS has enough time to write to Google Drive
+      const r = await api("submit", { data, files: filesToSend }, hasFiles ? 60000 : 30000);
       if (!r?.ok) {
         setErrorMsg((r?.message) || "Pendaftaran belum berhasil. Silakan coba lagi.");
         return;
@@ -347,8 +511,7 @@ export default function PpdbForm() {
       clearDraft();
       formRef.current?.reset();
       setDigitCounts({});
-      setUploadPicked({});
-      setUploadInfos({});
+      UPLOAD_FIELDS.forEach((key) => removeUpload(key));
       setSuccess(true);
       requestAnimationFrame(() => {
         const el = topAnchorRef.current;
@@ -560,7 +723,11 @@ export default function PpdbForm() {
                   ) : <span />}
                   {last ? (
                     <button type="submit" id="btnSubmit" disabled={submitting} className="btn-primary ml-auto text-xs sm:text-sm">
-                      {submitting ? "⏳ Mengirim..." : "✅ Simpan & Kirim Pendaftaran"}
+                      {submitting
+                        ? (Object.values(uploadPicked).some((x) => x?.dataBase64)
+                            ? "⏳ Mengunggah berkas & menyimpan..."
+                            : "⏳ Mengirim...")
+                        : "✅ Simpan & Kirim Pendaftaran"}
                     </button>
                   ) : !showAll ? (
                     <button type="button" onClick={() => goToStep(n + 1)} className="btn-primary step-nav ml-auto text-xs sm:text-sm">
@@ -589,43 +756,86 @@ export default function PpdbForm() {
         <div className="section-head">
           <div>
             <h3 className="font-bold text-base">Upload Berkas (Opsional)</h3>
-            <p className="text-xs" style={{ color: "#d6f5e3" }}>Akta Kelahiran &amp; Kartu Keluarga</p>
+            <p className="text-xs text-blue-100">Akta Kelahiran &amp; Kartu Keluarga</p>
           </div>
           <span className="text-2xl" aria-hidden="true">📎</span>
         </div>
         <div className="p-5 space-y-4 text-sm">
-          <p className="text-slate-600">
-            Kalau mudah, lampirkan foto/scan di bawah ini agar panitia tidak perlu meminta fotokopi lagi.{" "}
-            <strong>Bisa juga dilewati</strong> — berkas bisa dikirim via WhatsApp ke{" "}
+          <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+            Lampirkan foto/scan di bawah ini agar panitia tidak perlu meminta fotokopi lagi.{" "}
+            <strong>Bisa juga dilewati</strong> — berkas dapat dikirim via WhatsApp ke{" "}
             <a
               href={`https://wa.me/${formatWAForLink(CONFIG.INFO_WA_ALT)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-bold hover:underline"
-              style={{ color: "#146c38" }}
+              className="font-bold text-[#1E6B49] hover:underline"
             >
               {CONFIG.INFO_WA_ALT_DISPLAY}
             </a>{" "}
-            setelah mendaftar.
+            setelah mendaftar. Foto kamera HP akan <strong>dioptimasi otomatis</strong> agar cepat terkirim.
           </p>
           <div className="grid md:grid-cols-2 gap-4">
-            {UPLOAD_FIELDS.map((key) => (
-              <div key={key}>
-                <label className="field-label" htmlFor={`file_${key}`}>
-                  {key === "aktaKelahiran" ? "Akta Kelahiran" : "Kartu Keluarga"} (JPG/PNG/PDF, maks 5 MB)
-                </label>
-                <input
-                  type="file"
-                  id={`file_${key}`}
-                  accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf"
-                  className="field-input !py-2 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-ra-50 file:text-ra-700 file:text-xs file:font-bold"
-                  onChange={(e) => pickUpload(key, e.target)}
-                />
-                {uploadInfos[key]?.text && (
-                  <p className={uploadInfos[key].cls}>{uploadInfos[key].text}</p>
-                )}
-              </div>
-            ))}
+            {UPLOAD_FIELDS.map((key) => {
+              const item = uploadPicked[key];
+              const title = key === "aktaKelahiran" ? "📄 Akta Kelahiran" : "👨‍👩‍👧‍👦 Kartu Keluarga (KK)";
+              return (
+                <div key={key} className="p-4 rounded-2xl border-2 border-slate-200/80 bg-slate-50/60 space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <label className="field-label !mb-0 font-heading font-bold" htmlFor={`file_${key}`}>
+                      {title}
+                    </label>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase">Maks 5 MB</span>
+                  </div>
+
+                  {item ? (
+                    <div className="flex items-center justify-between gap-3 bg-white p-3 rounded-xl border border-emerald-300 shadow-2xs">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        {item.previewUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={item.previewUrl}
+                            alt="Preview"
+                            className="w-12 h-12 object-cover rounded-lg border border-slate-200 shrink-0"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 bg-red-100 text-red-700 rounded-lg flex items-center justify-center font-bold text-xs shrink-0">
+                            PDF
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-slate-900 truncate">
+                            {item.name}
+                          </p>
+                          <p className="text-[11px] text-emerald-700 font-semibold">
+                            {item.sizeStr} · Siap dikirim
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeUpload(key)}
+                        className="text-xs font-bold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-lg border border-rose-200 shrink-0 transition"
+                      >
+                        Ganti
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      <input
+                        type="file"
+                        id={`file_${key}`}
+                        accept="image/jpeg,image/png,image/jpg,.jpg,.jpeg,.png,.pdf,application/pdf"
+                        className="field-input !py-2 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-emerald-50 file:text-[#1E6B49] file:text-xs file:font-bold file:cursor-pointer cursor-pointer text-xs"
+                        onChange={(e) => pickUpload(key, e.target)}
+                      />
+                      {uploadInfos[key]?.text && (
+                        <p className={uploadInfos[key].cls}>{uploadInfos[key].text}</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
           <p className="text-[11px] text-slate-500">
             Berkas hanya dilihat panitia PPDB dan disimpan di penyimpanan privat sekolah, tidak dibagikan ke publik.

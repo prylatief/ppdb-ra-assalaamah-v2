@@ -4,7 +4,7 @@
 
 import { CONFIG } from "./config";
 
-export async function api(action: string, payload: Record<string, unknown> = {}, timeoutMs = 30000) {
+export async function api(action: string, payload: Record<string, unknown> = {}, timeoutMs = 60000) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
