@@ -645,45 +645,65 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             
-            {/* Photo 1 */}
+            {/* Photo 1: Sentra Balok di Kelas */}
             <div className="group relative rounded-3xl overflow-hidden shadow-md bg-white border-2 border-[#1E6B49]/30 aspect-4/3 cursor-pointer hover:-translate-y-1 transition-transform">
-              <SmartPhoto baseName="gallery-1" alt="Ruang Kelas Nyaman Ber-AC" aspect="w-full h-full" />
+              <SmartPhoto baseName="gallery-1" alt="Sentra Balok & Konstruksi di Ruang Kelas" aspect="w-full h-full" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#112F20]/90 via-[#1E6B49]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
-                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Fasilitas</span>
-                <p className="text-base font-heading font-bold">Ruang Kelas Nyaman &amp; Ber-AC</p>
-                <p className="text-xs text-slate-200 mt-0.5">Suasana belajar kondusif dan bersih</p>
+                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Sentra Kelas</span>
+                <p className="text-base font-heading font-bold">Sentra Balok &amp; Kreativitas</p>
+                <p className="text-xs text-slate-200 mt-0.5">Mengeksplorasi imajinasi &amp; kerja sama tim di kelas</p>
               </div>
             </div>
 
-            {/* Photo 2 */}
+            {/* Photo 2: Ketangkasan Motorik di Lapangan */}
             <div className="group relative rounded-3xl overflow-hidden shadow-md bg-white border-2 border-[#FBBF24] aspect-4/3 cursor-pointer hover:-translate-y-1 transition-transform">
-              <SmartPhoto baseName="gallery-2" alt="Area Bermain Outdoor Aman" aspect="w-full h-full" />
+              <SmartPhoto baseName="gallery-2" alt="Permainan Ketangkasan Bola di Lapangan" aspect="w-full h-full" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#112F20]/90 via-[#1E6B49]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
-                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Outdoor</span>
-                <p className="text-base font-heading font-bold">Area Bermain &amp; Ketangkasan</p>
-                <p className="text-xs text-slate-200 mt-0.5">Taman ramah anak berpagar aman</p>
+                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Motorik Ceria</span>
+                <p className="text-base font-heading font-bold">Ketangkasan Bola Warna</p>
+                <p className="text-xs text-slate-200 mt-0.5">Melatih fokus dan gerak motorik di lapangan terbuka</p>
               </div>
             </div>
 
-            {/* Photo 3 */}
+            {/* Photo 3: Karnaval Profesi Cita-Cita */}
             <div className="group relative rounded-3xl overflow-hidden shadow-md bg-white border-2 border-[#3CB371] aspect-4/3 cursor-pointer hover:-translate-y-1 transition-transform">
-              <SmartPhoto baseName="gallery-3" alt="Pojok Baca & Perpustakaan" aspect="w-full h-full" />
+              <SmartPhoto baseName="gallery-3" alt="Pentas Profesi Cita-Cita Siswa" aspect="w-full h-full" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#112F20]/90 via-[#1E6B49]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
-                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Literasi</span>
-                <p className="text-base font-heading font-bold">Pojok Baca &amp; Cerita Islami</p>
-                <p className="text-xs text-slate-200 mt-0.5">Buku bergambar adab &amp; kisah nabi</p>
+                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Cita-Cita</span>
+                <p className="text-base font-heading font-bold">Pentas Profesi Masa Depan</p>
+                <p className="text-xs text-slate-200 mt-0.5">Mengenal ragam profesi mulia sejak usia dini</p>
               </div>
             </div>
 
-            {/* Photo 4 */}
+            {/* Photo 4: Prestasi Manasik Haji */}
             <div className="group relative rounded-3xl overflow-hidden shadow-md bg-white border-2 border-[#1E6B49]/30 aspect-4/3 cursor-pointer hover:-translate-y-1 transition-transform">
-              <SmartPhoto baseName="gallery-4" alt="Praktik Ibadah & Manasik" aspect="w-full h-full" />
+              <SmartPhoto baseName="gallery-4" alt="Prestasi Juara Manasik Haji Cilik" aspect="w-full h-full" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#112F20]/90 via-[#1E6B49]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
-                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Kegiatan</span>
-                <p className="text-base font-heading font-bold">Praktik Ibadah &amp; Manasik</p>
-                <p className="text-xs text-slate-200 mt-0.5">Mengenal rukun Islam sejak dini</p>
+                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Prestasi</span>
+                <p className="text-base font-heading font-bold">Juara Manasik Haji Cilik</p>
+                <p className="text-xs text-slate-200 mt-0.5">Piala penghargaan peragaan manasik haji anak</p>
+              </div>
+            </div>
+
+            {/* Photo 5: Wisata Alam & Edukasi Berkebun */}
+            <div className="group relative rounded-3xl overflow-hidden shadow-md bg-white border-2 border-[#FBBF24] aspect-4/3 cursor-pointer hover:-translate-y-1 transition-transform">
+              <SmartPhoto baseName="gallery-5" alt="Wisata Alam & Edukasi Berkebun" aspect="w-full h-full" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#112F20]/90 via-[#1E6B49]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
+                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Eksplorasi Alam</span>
+                <p className="text-base font-heading font-bold">Wisata Edukasi Berkebun</p>
+                <p className="text-xs text-slate-200 mt-0.5">Mengenal aneka tanaman &amp; alam ciptaan Allah</p>
+              </div>
+            </div>
+
+            {/* Photo 6: Dewan Asatidz & Guru RA Assalaamah */}
+            <div className="group relative rounded-3xl overflow-hidden shadow-md bg-white border-2 border-[#3CB371] aspect-4/3 cursor-pointer hover:-translate-y-1 transition-transform">
+              <SmartPhoto baseName="gallery-6" alt="Dewan Guru & Asatidz RA Assalaamah" aspect="w-full h-full" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#112F20]/90 via-[#1E6B49]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
+                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Pendidik</span>
+                <p className="text-base font-heading font-bold">Dewan Guru &amp; Asatidz</p>
+                <p className="text-xs text-slate-200 mt-0.5">Penuh kehangatan membina akidah &amp; akhlak ananda</p>
               </div>
             </div>
 
