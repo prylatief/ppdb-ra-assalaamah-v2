@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-interface MarqueePhotoItem {
+export interface MarqueePhotoItem {
   src: string;
   title: string;
   tag: string;
@@ -12,7 +12,7 @@ interface MarqueePhotoItem {
   borderColor: string;
 }
 
-const MARQUEE_ROW_1: MarqueePhotoItem[] = [
+export const MARQUEE_ROW_1: MarqueePhotoItem[] = [
   {
     src: "/images/activity-1.jpg",
     title: "Mengaji Tilawati",
@@ -69,7 +69,7 @@ const MARQUEE_ROW_1: MarqueePhotoItem[] = [
   },
 ];
 
-const MARQUEE_ROW_2: MarqueePhotoItem[] = [
+export const MARQUEE_ROW_2: MarqueePhotoItem[] = [
   {
     src: "/images/activity-4.jpg",
     title: "Wahana Jaring Tali",
@@ -126,10 +126,25 @@ const MARQUEE_ROW_2: MarqueePhotoItem[] = [
   },
 ];
 
-function MarqueeCard({ item }: { item: MarqueePhotoItem }) {
+function MarqueeCard({
+  item,
+  onClick,
+}: {
+  item: MarqueePhotoItem;
+  onClick?: () => void;
+}) {
   return (
     <div
-      className={`shrink-0 w-64 sm:w-76 bg-white rounded-3xl overflow-hidden border-[3px] ${item.borderColor} shadow-[0_4px_0_rgba(17,47,32,0.12)] hover:-translate-y-1 transition-all select-none`}
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}
+      className={`group shrink-0 w-64 sm:w-76 bg-white rounded-3xl overflow-hidden border-[3px] ${item.borderColor} shadow-[0_4px_0_rgba(17,47,32,0.12)] hover:-translate-y-1 active:scale-[0.98] transition-all select-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1E6B49]`}
     >
       {/* Photo Container */}
       <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
@@ -137,7 +152,7 @@ function MarqueeCard({ item }: { item: MarqueePhotoItem }) {
         <img
           src={item.src}
           alt={item.title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           loading="lazy"
         />
         {/* Tag Pill di Atas Foto */}
@@ -148,11 +163,18 @@ function MarqueeCard({ item }: { item: MarqueePhotoItem }) {
             {item.tag}
           </span>
         </div>
+
+        {/* Hover / Tap Hint Overlay */}
+        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+          <span className="bg-white/90 text-[#112F20] text-xs font-heading font-bold px-3 py-1 rounded-full shadow-md backdrop-blur-xs">
+            🔍 Klik untuk lihat full
+          </span>
+        </div>
       </div>
 
       {/* Clean Caption di Bawah Foto (Sangat Jelas di HP, Gak Menutupi Wajah Anak) */}
       <div className="p-3.5 space-y-1">
-        <h4 className="font-heading font-bold text-sm sm:text-base text-[#112F20] leading-snug truncate">
+        <h4 className="font-heading font-bold text-sm sm:text-base text-[#112F20] leading-snug truncate group-hover:text-[#1E6B49] transition-colors">
           {item.title}
         </h4>
         <p className="font-body text-[11px] sm:text-xs text-[#112F20]/75 leading-relaxed line-clamp-2">
@@ -163,7 +185,11 @@ function MarqueeCard({ item }: { item: MarqueePhotoItem }) {
   );
 }
 
-export default function PhotoMarquee() {
+export default function PhotoMarquee({
+  onPhotoClick,
+}: {
+  onPhotoClick?: (item: MarqueePhotoItem) => void;
+}) {
   const [isPaused, setIsPaused] = useState(false);
 
   return (
@@ -186,7 +212,11 @@ export default function PhotoMarquee() {
           }`}
         >
           {MARQUEE_ROW_1.map((item, idx) => (
-            <MarqueeCard key={`row1-a-${idx}`} item={item} />
+            <MarqueeCard
+              key={`row1-a-${idx}`}
+              item={item}
+              onClick={() => onPhotoClick?.(item)}
+            />
           ))}
         </div>
         <div
@@ -196,7 +226,11 @@ export default function PhotoMarquee() {
           }`}
         >
           {MARQUEE_ROW_1.map((item, idx) => (
-            <MarqueeCard key={`row1-b-${idx}`} item={item} />
+            <MarqueeCard
+              key={`row1-b-${idx}`}
+              item={item}
+              onClick={() => onPhotoClick?.(item)}
+            />
           ))}
         </div>
       </div>
@@ -209,7 +243,11 @@ export default function PhotoMarquee() {
           }`}
         >
           {MARQUEE_ROW_2.map((item, idx) => (
-            <MarqueeCard key={`row2-a-${idx}`} item={item} />
+            <MarqueeCard
+              key={`row2-a-${idx}`}
+              item={item}
+              onClick={() => onPhotoClick?.(item)}
+            />
           ))}
         </div>
         <div
@@ -219,14 +257,18 @@ export default function PhotoMarquee() {
           }`}
         >
           {MARQUEE_ROW_2.map((item, idx) => (
-            <MarqueeCard key={`row2-b-${idx}`} item={item} />
+            <MarqueeCard
+              key={`row2-b-${idx}`}
+              item={item}
+              onClick={() => onPhotoClick?.(item)}
+            />
           ))}
         </div>
       </div>
 
       <div className="text-center pt-2">
         <p className="text-[11px] sm:text-xs text-[#112F20]/60 font-body font-medium">
-          💡 <em>Ketuk / sentuh foto untuk menahan gerakan</em>
+          💡 <em>Klik foto untuk memperbesar / tahan untuk menjeda</em>
         </p>
       </div>
     </div>

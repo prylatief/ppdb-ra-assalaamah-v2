@@ -25,13 +25,19 @@ import {
 import Navbar from "@/components/Navbar";
 import SmartPhoto from "@/components/SmartPhoto";
 import MascotIllustration from "@/components/MascotIllustration";
-import PhotoMarquee from "@/components/PhotoMarquee";
+import PhotoMarquee, { MARQUEE_ROW_1, MARQUEE_ROW_2 } from "@/components/PhotoMarquee";
+import LightboxModal, { type LightboxItem } from "@/components/LightboxModal";
 import BiayaTable from "@/components/BiayaTable";
 import PpdbForm from "@/components/PpdbForm";
 import { ArcAccordion, type AccordionItem } from "@/components/arc/ArcAccordion";
 import { ArcStepper, type StepItem } from "@/components/arc/ArcStepper";
 import { CONFIG, formatWAForLink } from "@/lib/config";
 import { motionTokens } from "@/lib/motion";
+
+const ALL_LIGHTBOX_PHOTOS: LightboxItem[] = [
+  ...MARQUEE_ROW_1.map((x) => ({ src: x.src, title: x.title, tag: x.tag, desc: x.desc })),
+  ...MARQUEE_ROW_2.map((x) => ({ src: x.src, title: x.title, tag: x.tag, desc: x.desc })),
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -53,6 +59,14 @@ function WALink({ raw, shown }: { raw: string; shown: string }) {
 
 export default function HomePage() {
   const shouldReduceMotion = useReducedMotion();
+
+  // State Lightbox Modal Foto Fullscreen
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const openLightbox = (src: string) => {
+    const idx = ALL_LIGHTBOX_PHOTOS.findIndex((p) => p.src === src);
+    setLightboxIndex(idx >= 0 ? idx : 0);
+  };
 
   // State Maskot Balon Kata (Speech Bubble)
   const [greetingIndex, setGreetingIndex] = useState(0);
@@ -471,28 +485,48 @@ export default function HomePage() {
           {/* Left Side: 2x2 Photo Grid */}
           <div className="lg:col-span-6 relative">
             <div className="grid grid-cols-2 gap-3 sm:gap-4 relative z-10">
-              <div className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#1E6B49] relative group">
+              <div
+                onClick={() => openLightbox("/images/activity-1.jpg")}
+                className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#1E6B49] relative group cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+                title="Klik untuk lihat foto penuh"
+              >
                 <SmartPhoto baseName="activity-1" alt="Belajar Mengaji Tilawati" aspect="aspect-square" />
-                <span className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 bg-white/95 text-[#1E6B49] text-[10px] sm:text-xs font-heading font-bold px-2.5 py-1 rounded-full border border-[#1E6B49]/30 shadow-xs">
-                  📖 Tilawati
+                <span className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 bg-white/95 text-[#1E6B49] text-[10px] sm:text-xs font-heading font-bold px-2.5 py-1 rounded-full border border-[#1E6B49]/30 shadow-xs flex items-center gap-1">
+                  <span>📖 Tilawati</span>
+                  <span className="opacity-60 text-[9px]">🔍</span>
                 </span>
               </div>
-              <div className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#FBBF24] mt-4 sm:mt-6 relative group">
+              <div
+                onClick={() => openLightbox("/images/activity-2.jpg")}
+                className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#FBBF24] mt-4 sm:mt-6 relative group cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+                title="Klik untuk lihat foto penuh"
+              >
                 <SmartPhoto baseName="activity-2" alt="Praktek Sholat & Ibadah" aspect="aspect-square" />
-                <span className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 bg-white/95 text-[#B45309] text-[10px] sm:text-xs font-heading font-bold px-2.5 py-1 rounded-full border border-[#FBBF24]/50 shadow-xs">
-                  🤲 Sholat
+                <span className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 bg-white/95 text-[#B45309] text-[10px] sm:text-xs font-heading font-bold px-2.5 py-1 rounded-full border border-[#FBBF24]/50 shadow-xs flex items-center gap-1">
+                  <span>🤲 Sholat</span>
+                  <span className="opacity-60 text-[9px]">🔍</span>
                 </span>
               </div>
-              <div className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#3CB371] -mt-4 sm:-mt-6 relative group">
+              <div
+                onClick={() => openLightbox("/images/activity-3.jpg")}
+                className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#3CB371] -mt-4 sm:-mt-6 relative group cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+                title="Klik untuk lihat foto penuh"
+              >
                 <SmartPhoto baseName="activity-3" alt="Eksplorasi Sains & Kreasi" aspect="aspect-square" />
-                <span className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 bg-white/95 text-[#047857] text-[10px] sm:text-xs font-heading font-bold px-2.5 py-1 rounded-full border border-[#3CB371]/30 shadow-xs">
-                  🎨 Kreasi Seni
+                <span className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 bg-white/95 text-[#047857] text-[10px] sm:text-xs font-heading font-bold px-2.5 py-1 rounded-full border border-[#3CB371]/30 shadow-xs flex items-center gap-1">
+                  <span>🎨 Kreasi</span>
+                  <span className="opacity-60 text-[9px]">🔍</span>
                 </span>
               </div>
-              <div className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#1E6B49] relative group">
+              <div
+                onClick={() => openLightbox("/images/activity-4.jpg")}
+                className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#1E6B49] relative group cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+                title="Klik untuk lihat foto penuh"
+              >
                 <SmartPhoto baseName="activity-4" alt="Bermain Motorik & Ketangkasan" aspect="aspect-square" />
-                <span className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 bg-white/95 text-[#1E6B49] text-[10px] sm:text-xs font-heading font-bold px-2.5 py-1 rounded-full border border-[#1E6B49]/30 shadow-xs">
-                  🧗 Ketangkasan
+                <span className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 bg-white/95 text-[#1E6B49] text-[10px] sm:text-xs font-heading font-bold px-2.5 py-1 rounded-full border border-[#1E6B49]/30 shadow-xs flex items-center gap-1">
+                  <span>🧗 Ketangkasan</span>
+                  <span className="opacity-60 text-[9px]">🔍</span>
                 </span>
               </div>
             </div>
@@ -660,7 +694,7 @@ export default function HomePage() {
 
           {/* GAMBAR BERJALAN (Infinite Photo Marquee Ticker) */}
           <div className="mb-14 -mx-4 sm:mx-0">
-            <PhotoMarquee />
+            <PhotoMarquee onPhotoClick={(item) => openLightbox(item.src)} />
           </div>
 
           {/* 6 KARTU KEGIATAN PILIHAN (Keterangan di Bawah Foto, Terbaca Jelas di HP Tanpa Shadow Gelap) */}
@@ -669,22 +703,29 @@ export default function HomePage() {
               Fasilitas &amp; Aktivitas Unggulan
             </h3>
             <p className="font-body text-xs sm:text-sm text-[#112F20]/70 mt-1">
-              Sarana lengkap dan pendidik berdedikasi mendukung setiap tahap tumbuh kembang ananda.
+              Sarana lengkap dan pendidik berdedikasi mendukung setiap tahap tumbuh kembang ananda. (Klik foto untuk perbesar).
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
             
             {/* Card 1: Sentra Balok */}
-            <div className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#1E6B49] shadow-[0_5px_0_#1E6B49] flex flex-col justify-between hover:-translate-y-1 transition-transform">
+            <div
+              onClick={() => openLightbox("/images/gallery-1.jpg")}
+              className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#1E6B49] shadow-[0_5px_0_#1E6B49] flex flex-col justify-between hover:-translate-y-1 active:scale-[0.98] transition-all cursor-pointer group"
+              title="Klik untuk lihat foto penuh"
+            >
               <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
                 <SmartPhoto baseName="gallery-1" alt="Sentra Balok & Konstruksi di Ruang Kelas" aspect="w-full h-full" />
                 <span className="absolute top-3 left-3 bg-[#D1FAE5] text-[#1E6B49] text-xs font-heading font-bold px-3 py-1 rounded-full border border-[#1E6B49]/30 shadow-xs">
                   🧱 Sentra Kelas
                 </span>
+                <span className="absolute bottom-2.5 right-2.5 bg-black/60 text-white text-[10px] font-heading font-bold px-2 py-0.5 rounded-full backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                  🔍 Lihat Full
+                </span>
               </div>
               <div className="p-4 sm:p-5 space-y-1">
-                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug">
+                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug group-hover:text-[#1E6B49] transition-colors">
                   Sentra Balok &amp; Kreativitas
                 </h4>
                 <p className="font-body text-xs sm:text-sm text-[#112F20]/75 leading-relaxed font-medium">
@@ -694,15 +735,22 @@ export default function HomePage() {
             </div>
 
             {/* Card 2: Motorik Ceria */}
-            <div className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#FBBF24] shadow-[0_5px_0_#D97706] flex flex-col justify-between hover:-translate-y-1 transition-transform">
+            <div
+              onClick={() => openLightbox("/images/gallery-2.jpg")}
+              className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#FBBF24] shadow-[0_5px_0_#D97706] flex flex-col justify-between hover:-translate-y-1 active:scale-[0.98] transition-all cursor-pointer group"
+              title="Klik untuk lihat foto penuh"
+            >
               <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
                 <SmartPhoto baseName="gallery-2" alt="Permainan Ketangkasan Bola di Lapangan" aspect="w-full h-full" />
                 <span className="absolute top-3 left-3 bg-[#FEF3C7] text-[#B45309] text-xs font-heading font-bold px-3 py-1 rounded-full border border-[#FBBF24]/50 shadow-xs">
                   ⚽ Motorik Ceria
                 </span>
+                <span className="absolute bottom-2.5 right-2.5 bg-black/60 text-white text-[10px] font-heading font-bold px-2 py-0.5 rounded-full backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                  🔍 Lihat Full
+                </span>
               </div>
               <div className="p-4 sm:p-5 space-y-1">
-                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug">
+                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug group-hover:text-[#B45309] transition-colors">
                   Ketangkasan Bola Warna
                 </h4>
                 <p className="font-body text-xs sm:text-sm text-[#112F20]/75 leading-relaxed font-medium">
@@ -712,15 +760,22 @@ export default function HomePage() {
             </div>
 
             {/* Card 3: Pentas Profesi */}
-            <div className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#3CB371] shadow-[0_5px_0_#1E6B49] flex flex-col justify-between hover:-translate-y-1 transition-transform">
+            <div
+              onClick={() => openLightbox("/images/gallery-3.jpg")}
+              className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#3CB371] shadow-[0_5px_0_#1E6B49] flex flex-col justify-between hover:-translate-y-1 active:scale-[0.98] transition-all cursor-pointer group"
+              title="Klik untuk lihat foto penuh"
+            >
               <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
                 <SmartPhoto baseName="gallery-3" alt="Pentas Profesi Cita-Cita Siswa" aspect="w-full h-full" />
                 <span className="absolute top-3 left-3 bg-[#D1FAE5] text-[#1E6B49] text-xs font-heading font-bold px-3 py-1 rounded-full border border-[#1E6B49]/30 shadow-xs">
                   👨‍✈️ Cita-Cita
                 </span>
+                <span className="absolute bottom-2.5 right-2.5 bg-black/60 text-white text-[10px] font-heading font-bold px-2 py-0.5 rounded-full backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                  🔍 Lihat Full
+                </span>
               </div>
               <div className="p-4 sm:p-5 space-y-1">
-                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug">
+                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug group-hover:text-[#1E6B49] transition-colors">
                   Pentas Profesi Masa Depan
                 </h4>
                 <p className="font-body text-xs sm:text-sm text-[#112F20]/75 leading-relaxed font-medium">
@@ -730,15 +785,22 @@ export default function HomePage() {
             </div>
 
             {/* Card 4: Prestasi Manasik */}
-            <div className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#1E6B49] shadow-[0_5px_0_#1E6B49] flex flex-col justify-between hover:-translate-y-1 transition-transform">
+            <div
+              onClick={() => openLightbox("/images/gallery-4.jpg")}
+              className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#1E6B49] shadow-[0_5px_0_#1E6B49] flex flex-col justify-between hover:-translate-y-1 active:scale-[0.98] transition-all cursor-pointer group"
+              title="Klik untuk lihat foto penuh"
+            >
               <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
                 <SmartPhoto baseName="gallery-4" alt="Prestasi Juara Manasik Haji Cilik" aspect="w-full h-full" />
                 <span className="absolute top-3 left-3 bg-[#D1FAE5] text-[#1E6B49] text-xs font-heading font-bold px-3 py-1 rounded-full border border-[#1E6B49]/30 shadow-xs">
                   🏆 Prestasi
                 </span>
+                <span className="absolute bottom-2.5 right-2.5 bg-black/60 text-white text-[10px] font-heading font-bold px-2 py-0.5 rounded-full backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                  🔍 Lihat Full
+                </span>
               </div>
               <div className="p-4 sm:p-5 space-y-1">
-                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug">
+                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug group-hover:text-[#1E6B49] transition-colors">
                   Juara Manasik Haji Cilik
                 </h4>
                 <p className="font-body text-xs sm:text-sm text-[#112F20]/75 leading-relaxed font-medium">
@@ -748,15 +810,22 @@ export default function HomePage() {
             </div>
 
             {/* Card 5: Wisata Berkebun */}
-            <div className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#FBBF24] shadow-[0_5px_0_#D97706] flex flex-col justify-between hover:-translate-y-1 transition-transform">
+            <div
+              onClick={() => openLightbox("/images/gallery-5.jpg")}
+              className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#FBBF24] shadow-[0_5px_0_#D97706] flex flex-col justify-between hover:-translate-y-1 active:scale-[0.98] transition-all cursor-pointer group"
+              title="Klik untuk lihat foto penuh"
+            >
               <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
                 <SmartPhoto baseName="gallery-5" alt="Wisata Alam & Edukasi Berkebun" aspect="w-full h-full" />
                 <span className="absolute top-3 left-3 bg-[#FEF3C7] text-[#B45309] text-xs font-heading font-bold px-3 py-1 rounded-full border border-[#FBBF24]/50 shadow-xs">
                   🌿 Alam &amp; Sains
                 </span>
+                <span className="absolute bottom-2.5 right-2.5 bg-black/60 text-white text-[10px] font-heading font-bold px-2 py-0.5 rounded-full backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                  🔍 Lihat Full
+                </span>
               </div>
               <div className="p-4 sm:p-5 space-y-1">
-                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug">
+                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug group-hover:text-[#B45309] transition-colors">
                   Wisata Edukasi Berkebun
                 </h4>
                 <p className="font-body text-xs sm:text-sm text-[#112F20]/75 leading-relaxed font-medium">
@@ -766,15 +835,22 @@ export default function HomePage() {
             </div>
 
             {/* Card 6: Dewan Guru */}
-            <div className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#3CB371] shadow-[0_5px_0_#1E6B49] flex flex-col justify-between hover:-translate-y-1 transition-transform">
+            <div
+              onClick={() => openLightbox("/images/gallery-6.jpg")}
+              className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#3CB371] shadow-[0_5px_0_#1E6B49] flex flex-col justify-between hover:-translate-y-1 active:scale-[0.98] transition-all cursor-pointer group"
+              title="Klik untuk lihat foto penuh"
+            >
               <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
                 <SmartPhoto baseName="gallery-6" alt="Dewan Guru & Asatidz RA Assalaamah" aspect="w-full h-full" />
                 <span className="absolute top-3 left-3 bg-[#D1FAE5] text-[#1E6B49] text-xs font-heading font-bold px-3 py-1 rounded-full border border-[#1E6B49]/30 shadow-xs">
                   🧕 Pendidik
                 </span>
+                <span className="absolute bottom-2.5 right-2.5 bg-black/60 text-white text-[10px] font-heading font-bold px-2 py-0.5 rounded-full backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                  🔍 Lihat Full
+                </span>
               </div>
               <div className="p-4 sm:p-5 space-y-1">
-                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug">
+                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug group-hover:text-[#1E6B49] transition-colors">
                   Dewan Guru &amp; Asatidz
                 </h4>
                 <p className="font-body text-xs sm:text-sm text-[#112F20]/75 leading-relaxed font-medium">
@@ -1037,6 +1113,14 @@ export default function HomePage() {
           <span>DAFTAR PPDB</span>
         </Link>
       </div>
+
+      {/* Lightbox Modal Fullscreen untuk Lihat Foto Penuh */}
+      <LightboxModal
+        items={ALL_LIGHTBOX_PHOTOS}
+        currentIndex={lightboxIndex}
+        onClose={() => setLightboxIndex(null)}
+        onNavigate={(idx) => setLightboxIndex(idx)}
+      />
     </div>
   );
 }
