@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   FIELD_GROUPS,
   CONFIG,
@@ -35,6 +36,11 @@ function renderReceiptGroup(group: (typeof FIELD_GROUPS)[0], d: RegistrationData
 
 export default function ReceiptModal({ data, showWA, onClose }: ReceiptModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!data) return;
@@ -47,7 +53,7 @@ export default function ReceiptModal({ data, showWA, onClose }: ReceiptModalProp
     };
   }, [data, onClose]);
 
-  if (!data) return null;
+  if (!data || !mounted) return null;
 
   function handleSendWA() {
     if (!data) return;
@@ -60,7 +66,7 @@ export default function ReceiptModal({ data, showWA, onClose }: ReceiptModalProp
     ${FIELD_GROUPS.map((g) => renderReceiptGroup(g, data)).join("")}
   </div>`;
 
-  return (
+  const modalJSX = (
     <div
       id="receiptModal"
       ref={modalRef}
@@ -168,4 +174,6 @@ export default function ReceiptModal({ data, showWA, onClose }: ReceiptModalProp
       </div>
     </div>
   );
+
+  return createPortal(modalJSX, document.body);
 }
