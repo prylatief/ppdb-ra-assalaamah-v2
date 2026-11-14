@@ -25,6 +25,7 @@ import {
 import Navbar from "@/components/Navbar";
 import SmartPhoto from "@/components/SmartPhoto";
 import MascotIllustration from "@/components/MascotIllustration";
+import PhotoMarquee from "@/components/PhotoMarquee";
 import BiayaTable from "@/components/BiayaTable";
 import PpdbForm from "@/components/PpdbForm";
 import { ArcAccordion, type AccordionItem } from "@/components/arc/ArcAccordion";
@@ -469,18 +470,30 @@ export default function HomePage() {
           
           {/* Left Side: 2x2 Photo Grid */}
           <div className="lg:col-span-6 relative">
-            <div className="grid grid-cols-2 gap-4 relative z-10">
-              <div className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#1E6B49]">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 relative z-10">
+              <div className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#1E6B49] relative group">
                 <SmartPhoto baseName="activity-1" alt="Belajar Mengaji Tilawati" aspect="aspect-square" />
+                <span className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 bg-white/95 text-[#1E6B49] text-[10px] sm:text-xs font-heading font-bold px-2.5 py-1 rounded-full border border-[#1E6B49]/30 shadow-xs">
+                  📖 Tilawati
+                </span>
               </div>
-              <div className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#FBBF24] mt-6">
+              <div className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#FBBF24] mt-4 sm:mt-6 relative group">
                 <SmartPhoto baseName="activity-2" alt="Praktek Sholat & Ibadah" aspect="aspect-square" />
+                <span className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 bg-white/95 text-[#B45309] text-[10px] sm:text-xs font-heading font-bold px-2.5 py-1 rounded-full border border-[#FBBF24]/50 shadow-xs">
+                  🤲 Sholat
+                </span>
               </div>
-              <div className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#3CB371] -mt-6">
+              <div className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#3CB371] -mt-4 sm:-mt-6 relative group">
                 <SmartPhoto baseName="activity-3" alt="Eksplorasi Sains & Kreasi" aspect="aspect-square" />
+                <span className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 bg-white/95 text-[#047857] text-[10px] sm:text-xs font-heading font-bold px-2.5 py-1 rounded-full border border-[#3CB371]/30 shadow-xs">
+                  🎨 Kreasi Seni
+                </span>
               </div>
-              <div className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#1E6B49]">
+              <div className="rounded-3xl overflow-hidden shadow-md border-[3px] border-[#1E6B49] relative group">
                 <SmartPhoto baseName="activity-4" alt="Bermain Motorik & Ketangkasan" aspect="aspect-square" />
+                <span className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 bg-white/95 text-[#1E6B49] text-[10px] sm:text-xs font-heading font-bold px-2.5 py-1 rounded-full border border-[#1E6B49]/30 shadow-xs">
+                  🧗 Ketangkasan
+                </span>
               </div>
             </div>
           </div>
@@ -629,81 +642,144 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 7. FASILITAS & GALERI KEGIATAN */}
-      <section id="galeri" className="bg-[#FEF3C7]/40 py-20 lg:py-28 border-t border-[#1E6B49]/15">
+      {/* 7. FASILITAS & GALERI KEGIATAN (DENGAN GAMBAR BERJALAN & KARTU CERIA) */}
+      <section id="galeri" className="bg-[#FEF3C7]/40 py-16 sm:py-24 border-t border-[#1E6B49]/15 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="text-center max-w-2xl mx-auto space-y-3 mb-14">
-            <span className="inline-block bg-[#FEF3C7] text-[#B45309] border border-[#FBBF24]/40 text-xs font-heading font-bold uppercase px-4 py-1.5 rounded-full tracking-wider">
+          <div className="text-center max-w-2xl mx-auto space-y-3 mb-10 sm:mb-12">
+            <span className="inline-block bg-[#FEF3C7] text-[#B45309] border border-[#FBBF24]/50 text-xs font-heading font-bold uppercase px-4 py-1.5 rounded-full tracking-wider shadow-2xs">
               Suasana &amp; Sarana
             </span>
             <h2 className="font-heading text-3xl sm:text-4xl font-bold text-[#1E6B49] tracking-tight">
-              Galeri Kegiatan &amp; Fasilitas Belajar
+              Galeri Dokumentasi Ceria Ananda
             </h2>
             <p className="font-body text-[#112F20]/75 text-sm sm:text-base font-medium">
-              Lingkungan madrasah yang bersih, asri, nyaman, dan mendukung kegiatan eksplorasi motorik serta spiritual anak setiap hari.
+              Koleksi momen nyata saat ananda mengaji Tilawati, sholat dhuha, bereksplorasi di sentra balok, dan wisata edukasi bersama guru &amp; teman.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* GAMBAR BERJALAN (Infinite Photo Marquee Ticker) */}
+          <div className="mb-14 -mx-4 sm:mx-0">
+            <PhotoMarquee />
+          </div>
+
+          {/* 6 KARTU KEGIATAN PILIHAN (Keterangan di Bawah Foto, Terbaca Jelas di HP Tanpa Shadow Gelap) */}
+          <div className="text-center max-w-xl mx-auto mb-8">
+            <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#112F20]">
+              Fasilitas &amp; Aktivitas Unggulan
+            </h3>
+            <p className="font-body text-xs sm:text-sm text-[#112F20]/70 mt-1">
+              Sarana lengkap dan pendidik berdedikasi mendukung setiap tahap tumbuh kembang ananda.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
             
-            {/* Photo 1: Sentra Balok di Kelas */}
-            <div className="group relative rounded-3xl overflow-hidden shadow-md bg-white border-2 border-[#1E6B49]/30 aspect-4/3 cursor-pointer hover:-translate-y-1 transition-transform">
-              <SmartPhoto baseName="gallery-1" alt="Sentra Balok & Konstruksi di Ruang Kelas" aspect="w-full h-full" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#112F20]/90 via-[#1E6B49]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
-                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Sentra Kelas</span>
-                <p className="text-base font-heading font-bold">Sentra Balok &amp; Kreativitas</p>
-                <p className="text-xs text-slate-200 mt-0.5">Mengeksplorasi imajinasi &amp; kerja sama tim di kelas</p>
+            {/* Card 1: Sentra Balok */}
+            <div className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#1E6B49] shadow-[0_5px_0_#1E6B49] flex flex-col justify-between hover:-translate-y-1 transition-transform">
+              <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
+                <SmartPhoto baseName="gallery-1" alt="Sentra Balok & Konstruksi di Ruang Kelas" aspect="w-full h-full" />
+                <span className="absolute top-3 left-3 bg-[#D1FAE5] text-[#1E6B49] text-xs font-heading font-bold px-3 py-1 rounded-full border border-[#1E6B49]/30 shadow-xs">
+                  🧱 Sentra Kelas
+                </span>
+              </div>
+              <div className="p-4 sm:p-5 space-y-1">
+                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug">
+                  Sentra Balok &amp; Kreativitas
+                </h4>
+                <p className="font-body text-xs sm:text-sm text-[#112F20]/75 leading-relaxed font-medium">
+                  Mengeksplorasi imajinasi arsitek cilik dan kerja sama tim yang rukun di dalam kelas.
+                </p>
               </div>
             </div>
 
-            {/* Photo 2: Ketangkasan Motorik di Lapangan */}
-            <div className="group relative rounded-3xl overflow-hidden shadow-md bg-white border-2 border-[#FBBF24] aspect-4/3 cursor-pointer hover:-translate-y-1 transition-transform">
-              <SmartPhoto baseName="gallery-2" alt="Permainan Ketangkasan Bola di Lapangan" aspect="w-full h-full" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#112F20]/90 via-[#1E6B49]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
-                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Motorik Ceria</span>
-                <p className="text-base font-heading font-bold">Ketangkasan Bola Warna</p>
-                <p className="text-xs text-slate-200 mt-0.5">Melatih fokus dan gerak motorik di lapangan terbuka</p>
+            {/* Card 2: Motorik Ceria */}
+            <div className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#FBBF24] shadow-[0_5px_0_#D97706] flex flex-col justify-between hover:-translate-y-1 transition-transform">
+              <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
+                <SmartPhoto baseName="gallery-2" alt="Permainan Ketangkasan Bola di Lapangan" aspect="w-full h-full" />
+                <span className="absolute top-3 left-3 bg-[#FEF3C7] text-[#B45309] text-xs font-heading font-bold px-3 py-1 rounded-full border border-[#FBBF24]/50 shadow-xs">
+                  ⚽ Motorik Ceria
+                </span>
+              </div>
+              <div className="p-4 sm:p-5 space-y-1">
+                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug">
+                  Ketangkasan Bola Warna
+                </h4>
+                <p className="font-body text-xs sm:text-sm text-[#112F20]/75 leading-relaxed font-medium">
+                  Melatih koordinasi mata, tangan, dan kelincahan fisik ananda di lapangan sekolah yang aman.
+                </p>
               </div>
             </div>
 
-            {/* Photo 3: Karnaval Profesi Cita-Cita */}
-            <div className="group relative rounded-3xl overflow-hidden shadow-md bg-white border-2 border-[#3CB371] aspect-4/3 cursor-pointer hover:-translate-y-1 transition-transform">
-              <SmartPhoto baseName="gallery-3" alt="Pentas Profesi Cita-Cita Siswa" aspect="w-full h-full" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#112F20]/90 via-[#1E6B49]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
-                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Cita-Cita</span>
-                <p className="text-base font-heading font-bold">Pentas Profesi Masa Depan</p>
-                <p className="text-xs text-slate-200 mt-0.5">Mengenal ragam profesi mulia sejak usia dini</p>
+            {/* Card 3: Pentas Profesi */}
+            <div className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#3CB371] shadow-[0_5px_0_#1E6B49] flex flex-col justify-between hover:-translate-y-1 transition-transform">
+              <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
+                <SmartPhoto baseName="gallery-3" alt="Pentas Profesi Cita-Cita Siswa" aspect="w-full h-full" />
+                <span className="absolute top-3 left-3 bg-[#D1FAE5] text-[#1E6B49] text-xs font-heading font-bold px-3 py-1 rounded-full border border-[#1E6B49]/30 shadow-xs">
+                  👨‍✈️ Cita-Cita
+                </span>
+              </div>
+              <div className="p-4 sm:p-5 space-y-1">
+                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug">
+                  Pentas Profesi Masa Depan
+                </h4>
+                <p className="font-body text-xs sm:text-sm text-[#112F20]/75 leading-relaxed font-medium">
+                  Mengenal ragam profesi mulia seperti dokter, pilot, tentara, dan pemadam kebakaran sejak dini.
+                </p>
               </div>
             </div>
 
-            {/* Photo 4: Prestasi Manasik Haji */}
-            <div className="group relative rounded-3xl overflow-hidden shadow-md bg-white border-2 border-[#1E6B49]/30 aspect-4/3 cursor-pointer hover:-translate-y-1 transition-transform">
-              <SmartPhoto baseName="gallery-4" alt="Prestasi Juara Manasik Haji Cilik" aspect="w-full h-full" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#112F20]/90 via-[#1E6B49]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
-                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Prestasi</span>
-                <p className="text-base font-heading font-bold">Juara Manasik Haji Cilik</p>
-                <p className="text-xs text-slate-200 mt-0.5">Piala penghargaan peragaan manasik haji anak</p>
+            {/* Card 4: Prestasi Manasik */}
+            <div className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#1E6B49] shadow-[0_5px_0_#1E6B49] flex flex-col justify-between hover:-translate-y-1 transition-transform">
+              <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
+                <SmartPhoto baseName="gallery-4" alt="Prestasi Juara Manasik Haji Cilik" aspect="w-full h-full" />
+                <span className="absolute top-3 left-3 bg-[#D1FAE5] text-[#1E6B49] text-xs font-heading font-bold px-3 py-1 rounded-full border border-[#1E6B49]/30 shadow-xs">
+                  🏆 Prestasi
+                </span>
+              </div>
+              <div className="p-4 sm:p-5 space-y-1">
+                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug">
+                  Juara Manasik Haji Cilik
+                </h4>
+                <p className="font-body text-xs sm:text-sm text-[#112F20]/75 leading-relaxed font-medium">
+                  Piala kebanggaan atas kekompakan &amp; ketertiban ananda dalam peragaan manasik haji.
+                </p>
               </div>
             </div>
 
-            {/* Photo 5: Wisata Alam & Edukasi Berkebun */}
-            <div className="group relative rounded-3xl overflow-hidden shadow-md bg-white border-2 border-[#FBBF24] aspect-4/3 cursor-pointer hover:-translate-y-1 transition-transform">
-              <SmartPhoto baseName="gallery-5" alt="Wisata Alam & Edukasi Berkebun" aspect="w-full h-full" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#112F20]/90 via-[#1E6B49]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
-                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Eksplorasi Alam</span>
-                <p className="text-base font-heading font-bold">Wisata Edukasi Berkebun</p>
-                <p className="text-xs text-slate-200 mt-0.5">Mengenal aneka tanaman &amp; alam ciptaan Allah</p>
+            {/* Card 5: Wisata Berkebun */}
+            <div className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#FBBF24] shadow-[0_5px_0_#D97706] flex flex-col justify-between hover:-translate-y-1 transition-transform">
+              <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
+                <SmartPhoto baseName="gallery-5" alt="Wisata Alam & Edukasi Berkebun" aspect="w-full h-full" />
+                <span className="absolute top-3 left-3 bg-[#FEF3C7] text-[#B45309] text-xs font-heading font-bold px-3 py-1 rounded-full border border-[#FBBF24]/50 shadow-xs">
+                  🌿 Alam &amp; Sains
+                </span>
+              </div>
+              <div className="p-4 sm:p-5 space-y-1">
+                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug">
+                  Wisata Edukasi Berkebun
+                </h4>
+                <p className="font-body text-xs sm:text-sm text-[#112F20]/75 leading-relaxed font-medium">
+                  Belajar memanen sayuran, mengenal biota kolam, dan mensyukuri keindahan alam ciptaan Allah.
+                </p>
               </div>
             </div>
 
-            {/* Photo 6: Dewan Asatidz & Guru RA Assalaamah */}
-            <div className="group relative rounded-3xl overflow-hidden shadow-md bg-white border-2 border-[#3CB371] aspect-4/3 cursor-pointer hover:-translate-y-1 transition-transform">
-              <SmartPhoto baseName="gallery-6" alt="Dewan Guru & Asatidz RA Assalaamah" aspect="w-full h-full" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#112F20]/90 via-[#1E6B49]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
-                <span className="text-[11px] font-heading font-bold text-[#FBBF24] uppercase tracking-wider">Pendidik</span>
-                <p className="text-base font-heading font-bold">Dewan Guru &amp; Asatidz</p>
-                <p className="text-xs text-slate-200 mt-0.5">Penuh kehangatan membina akidah &amp; akhlak ananda</p>
+            {/* Card 6: Dewan Guru */}
+            <div className="rounded-3xl overflow-hidden bg-white border-[3px] border-[#3CB371] shadow-[0_5px_0_#1E6B49] flex flex-col justify-between hover:-translate-y-1 transition-transform">
+              <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
+                <SmartPhoto baseName="gallery-6" alt="Dewan Guru & Asatidz RA Assalaamah" aspect="w-full h-full" />
+                <span className="absolute top-3 left-3 bg-[#D1FAE5] text-[#1E6B49] text-xs font-heading font-bold px-3 py-1 rounded-full border border-[#1E6B49]/30 shadow-xs">
+                  🧕 Pendidik
+                </span>
+              </div>
+              <div className="p-4 sm:p-5 space-y-1">
+                <h4 className="font-heading font-bold text-base sm:text-lg text-[#112F20] leading-snug">
+                  Dewan Guru &amp; Asatidz
+                </h4>
+                <p className="font-body text-xs sm:text-sm text-[#112F20]/75 leading-relaxed font-medium">
+                  Pendidik penyayang dan sabar yang mendampingi ananda dengan keteladanan akhlak mulia.
+                </p>
               </div>
             </div>
 
