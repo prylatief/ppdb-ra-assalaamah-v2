@@ -39,6 +39,9 @@ export default function AdminPage() {
   const [search, setSearch] = useState("");
   const [filterJK, setFilterJK] = useState("");
   const [receipt, setReceipt] = useState<{ data: RegistrationData } | null>(null);
+  const [toDelete, setToDelete] = useState<AdminRow | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   async function fetchRows(password: string) {
     const r = await api("list", { password });
@@ -90,6 +93,38 @@ export default function AdminPage() {
       );
     } finally {
       setLoginLoading(false);
+    }
+  }
+
+  async function confirmDelete() {
+    if (!toDelete) return;
+    setDeleting(true);
+    setDeleteError("");
+    try {
+      const r = await api("delete", { password: getPw(), regNumber: toDelete.regNumber });
+      if (!r?.ok) {
+        if (r?.code === "AUTH") {
+          setToDelete(null);
+          setPw("");
+          setView("login");
+          setLoginError("Sesi berakhir atau password salah.");
+          return;
+        }
+        setDeleteError(
+          r?.message && !/unknown|tidak dikenal/i.test(r.message)
+            ? r.message
+            : "Server belum mendukung aksi hapus. Perbarui Google Apps Script (lihat docs/apps-script.gs)."
+        );
+        return;
+      }
+      const reg = toDelete.regNumber;
+      setRows((prev) => prev.filter((x) => x.regNumber !== reg));
+      setToDelete(null);
+      setLoadStatus(`Data ${reg} dihapus · ${new Date().toLocaleTimeString("id-ID")}`);
+    } catch {
+      setDeleteError("Tidak bisa terhubung ke server. Data belum dihapus, coba lagi.");
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -150,6 +185,42 @@ export default function AdminPage() {
     <>
       {receipt && (
         <ReceiptModal data={receipt.data} showWA={false} onClose={() => setReceipt(null)} />
+      )}
+
+      {toDelete && (
+        <div
+          className="no-print fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="del-title"
+        >
+          <div className="section-card w-full max-w-md p-6 space-y-4">
+            <h2 id="del-title" className="text-lg font-extrabold text-rose-700">Hapus data pendaftar?</h2>
+            <p className="text-sm text-slate-700">
+              Data <b>{toDelete.namaLengkap}</b> ({toDelete.regNumber}) akan dihapus permanen dari Google Sheets.
+              Tindakan ini tidak bisa dibatalkan. Unduh CSV dulu bila perlu cadangan.
+            </p>
+            {deleteError && <p role="alert" className="text-xs text-rose-600 font-semibold">{deleteError}</p>}
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={() => { setToDelete(null); setDeleteError(""); }}
+                className="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={confirmDelete}
+                className="bg-rose-600 hover:bg-rose-700 disabled:opacity-60 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition"
+              >
+                {deleting ? "Menghapus..." : "Ya, hapus"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* ---- HEADER ---- */}
@@ -337,6 +408,14 @@ export default function AdminPage() {
                             >
                               👁️ Lihat & Cetak
                             </button>
+                            <button
+                              type="button"
+                              onClick={() => { setDeleteError(""); setToDelete(x); }}
+                              className="ml-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold px-3 py-2 rounded-lg text-[11px] transition"
+                              aria-label={`Hapus data ${x.namaLengkap}`}
+                            >
+                              🗑️ Hapus
+                            </button>
                           </td>
                           <td className="py-3 px-4 whitespace-nowrap">
                             {links.length > 0 ? links.map(([l, url]) => (
@@ -362,7 +441,7 @@ export default function AdminPage() {
               </div>
             </div>
             <p className="text-[11px] text-slate-400">
-              Hapus atau koreksi data langsung di Google Sheets (tab "PPDB"). Halaman ini hanya untuk melihat, mencari, mencetak, dan mengunduh.
+              Penghapusan bersifat permanen di Google Sheets (tab &quot;PPDB&quot;). Untuk koreksi isi data, ubah langsung di Google Sheets.
             </p>
           </div>
         )}
