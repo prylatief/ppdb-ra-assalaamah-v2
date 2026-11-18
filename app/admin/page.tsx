@@ -113,7 +113,7 @@ export default function AdminPage() {
         setDeleteError(
           r?.message && !/unknown|tidak dikenal/i.test(r.message)
             ? r.message
-            : "Server belum mendukung aksi hapus. Perbarui Google Apps Script (lihat docs/apps-script-delete.gs)."
+            : "Server belum mendukung aksi hapus. Perbarui Google Apps Script (lihat docs/apps-script.gs)."
         );
         return;
       }
